@@ -1,0 +1,15 @@
+# Dos servicios en Render:
+#  1. Servidor de partidas (Docker, WebSocket).
+#  2. Web del juego (sitio estático desde la rama "web", que contiene la carpeta web-build).
+services:
+  - type: web
+    name: el-lider-secreto-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+
+  - type: web
+    name: el-lider-secreto
+    runtime: static
+    staticPublishPath: ./
+    branch: web
