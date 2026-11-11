@@ -47,6 +47,7 @@ func _ready() -> void:
 	scroll = ScrollContainer.new()
 	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.get_v_scroll_bar().custom_minimum_size = Vector2(28, 0)
 	add_child(scroll)
 	margin = MarginContainer.new()
 	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -758,18 +759,53 @@ func show_online_menu() -> void:
 	_lbl("Jugar online", 34, GOLD)
 	_lbl("Cada jugador usa su propio móvil. Una persona crea la sala y comparte el código con los demás.", 17, MUTED)
 	_end_panel()
-	online_url_edit = _field(online_url, "Servidor (ws://... o wss://...)")
-	online_name_edit = _field(online_name, "Tu nombre")
-	online_code_edit = _field("", "Código de sala (solo para unirte)")
+	if OS.has_feature("web"):
+		_btn("Servidor: " + online_url, _ask_value.bind("url"), Color("#33465f"))
+		_btn("Tu nombre: " + (online_name if online_name != "" else "(sin nombre)"), _ask_value.bind("name"), Color("#33465f"))
+		_btn("Código de sala: " + (online_code if online_code != "" else "(solo para unirte)"), _ask_value.bind("code"), Color("#33465f"))
+	else:
+		online_url_edit = _field(online_url, "Servidor (ws://... o wss://...)")
+		online_url_edit.text_changed.connect(func(t: String): online_url = t)
+		online_name_edit = _field(online_name, "Tu nombre")
+		online_name_edit.text_changed.connect(func(t: String): online_name = t)
+		online_code_edit = _field(online_code, "Código de sala (solo para unirte)")
+		online_code_edit.text_changed.connect(func(t: String): online_code = t)
 	_btn("Crear sala", _online_go.bind(true), GREEN)
 	_btn("Unirse a sala", _online_go.bind(false), Color("#2c4f7c"))
 	_btn("Volver", show_menu, GREY)
 
 
+## Abre el cuadro nativo del navegador para escribir un valor (funciona en móviles).
+func _ask_value(key: String) -> void:
+	var title := ""
+	var current := ""
+	match key:
+		"url":
+			title = "Dirección del servidor"
+			current = online_url
+		"name":
+			title = "Tu nombre"
+			current = online_name
+		"code":
+			title = "Código de la sala"
+			current = online_code
+	var res = JavaScriptBridge.eval("prompt(%s, %s)" % [JSON.stringify(title), JSON.stringify(current)])
+	if res != null:
+		var v := String(res).strip_edges()
+		match key:
+			"url":
+				online_url = v
+			"name":
+				online_name = v
+			"code":
+				online_code = v.to_upper()
+	show_online_menu()
+
+
 func _online_go(create: bool) -> void:
-	online_url = online_url_edit.text.strip_edges()
-	online_name = online_name_edit.text.strip_edges()
-	online_code = online_code_edit.text.strip_edges()
+	online_url = online_url.strip_edges()
+	online_name = online_name.strip_edges()
+	online_code = online_code.strip_edges()
 	online_create = create
 	if online_name == "":
 		online_name = "Jugador"
@@ -785,6 +821,7 @@ func _online_go(create: bool) -> void:
 
 
 func _on_connected() -> void:
+	_toast("Conectado. Creando o uniéndote a la sala..." if online_create else "Conectado. Uniéndote a la sala...")
 	if online_create:
 		net.create_room(online_name)
 	else:
