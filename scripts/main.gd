@@ -29,7 +29,7 @@ var last_draw := 0
 var last_discard := 0
 var pending_pulse: Array = []
 var net: Net
-var online_url := "ws://127.0.0.1:8910"
+var online_url := "wss://el-lider-secreto-server.onrender.com"
 var online_name := ""
 var online_code := ""
 var online_create := true
