@@ -14,5 +14,8 @@ RUN wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Go
 WORKDIR /app
 COPY . .
 
+# Importa el proyecto para que Godot registre las clases globales (class_name) y genere .godot.
+RUN godot --headless --path /app --import || true
+
 # Render asigna el puerto en la variable PORT. net.gd lo lee al arrancar con --server.
 CMD ["godot", "--headless", "--path", "/app", "--", "--server"]
