@@ -36,7 +36,7 @@ var role_btn: Button
 var center_screen := false
 var rules_page := 0
 var net: Net
-var online_url := "wss://el-lider-secreto-server.onrender.com"
+var online_url := "wss://coronareal-server.onrender.com"
 var online_name := ""
 var online_code := ""
 var online_create := true

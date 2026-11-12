@@ -3,13 +3,13 @@
 #  2. Web del juego (sitio estático desde la rama "web", que contiene la carpeta web-build).
 services:
   - type: web
-    name: el-lider-secreto-server
+    name: coronareal-server
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
 
   - type: web
-    name: el-lider-secreto
+    name: coronareal
     runtime: static
     staticPublishPath: ./
     branch: web
