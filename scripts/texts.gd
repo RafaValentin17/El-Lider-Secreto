@@ -41,7 +41,7 @@ Veto: tras la quinta política tiránica, el Consejero puede proponer veto. Si e
 
 Poderes: ojeada a las tres siguientes políticas; investigar lealtad (cada jugador solo una vez); llamada a elecciones extraordinarias (el Rey elige al siguiente candidato y después la presidencia vuelve a su orden); ejecución (si es El Esclavista, ganan los libertadores).
 
-Límites de mandato: el Consejero anterior nunca puede repetir. El Rey anterior tampoco, salvo que solo queden 5 jugadores vivos.
+Límites de mandato: el Consejero anterior nunca puede repetir. En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.
 
 Créditos: basado en Secret El Esclavista (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Esta versión cambia la maquetación y los textos. Uso no comercial."""
 
@@ -83,7 +83,7 @@ const RULE_SECTIONS := [
 		"lines": [
 			"El Rey propone un Consejero entre los jugadores vivos.",
 			"El Consejero anterior nunca puede repetir.",
-			"El Rey anterior tampoco, salvo que solo queden 5 jugadores vivos.",
+			"En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.",
 		],
 		"example": "Partida de 7. El gobierno anterior fue Ana de Presidenta y Luis de Consejero. La siguiente ronda pasa a Marta, que no puede proponer a Luis, ni a Ana si Ana fue Presidenta.",
 	},
