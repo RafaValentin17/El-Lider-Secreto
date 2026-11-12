@@ -11,6 +11,7 @@ const NAVY := Color("#33413a")
 const GREEN := Color("#4f7d3a")
 const GREY := Color("#4a4a5e")
 const INK := Color("#2b1d0e")
+const TXT := 1.3  # factor de tamaño para textos legibles en móvil
 
 var scroll: ScrollContainer
 var margin: MarginContainer
@@ -132,7 +133,7 @@ func _lbl(text: String, size: int = 22, col: Color = CREAM) -> Label:
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", int(size * TXT))
 	l.add_theme_color_override("font_color", col)
 	cur.add_child(l)
 	return l
@@ -143,7 +144,7 @@ func _btn(text: String, cb: Callable, col: Color = Color("#2c4f7c")) -> Button:
 	b.text = text
 	b.custom_minimum_size = Vector2(0, 84)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 24)
+	b.add_theme_font_size_override("font_size", int(26 * TXT))
 	b.add_theme_color_override("font_color", CREAM)
 	b.add_theme_stylebox_override("normal", _sb(col))
 	b.add_theme_stylebox_override("hover", _sb(col.lightened(0.15)))
@@ -297,7 +298,7 @@ func _nav_btn(row: HBoxContainer, text: String, cb: Callable, enabled: bool) -> 
 	b.disabled = not enabled
 	b.custom_minimum_size = Vector2(0, 84)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 34 if text.length() == 1 else 24)
+	b.add_theme_font_size_override("font_size", int(34 * TXT) if text.length() == 1 else int(24 * TXT))
 	b.add_theme_color_override("font_color", CREAM)
 	b.add_theme_color_override("font_disabled_color", MUTED)
 	b.add_theme_stylebox_override("normal", _sb(Color("#2f6f8f")))
@@ -492,7 +493,7 @@ func show_board() -> void:
 			tags.append("eliminado")
 		var t := Label.new()
 		t.text = _pname(i) + ("\n" + _join(tags) if tags.size() > 0 else "")
-		t.add_theme_font_size_override("font_size", 18)
+		t.add_theme_font_size_override("font_size", int(18 * TXT))
 		t.add_theme_color_override("font_color", CREAM if alive else MUTED)
 		panel.add_child(t)
 		grid.add_child(panel)
@@ -1017,7 +1018,7 @@ func _render_online_board() -> void:
 			tags.append("eliminado")
 		var t := Label.new()
 		t.text = String(names[i]) + ("\n" + _join(tags) if tags.size() > 0 else "")
-		t.add_theme_font_size_override("font_size", 18)
+		t.add_theme_font_size_override("font_size", int(18 * TXT))
 		t.add_theme_color_override("font_color", CREAM if alive[i] else MUTED)
 		panel.add_child(t)
 		grid.add_child(panel)
