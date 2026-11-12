@@ -23,7 +23,7 @@ func set_board(k: String, n: int, p: Array, t: int) -> void:
 	enacted = n
 	powers = p
 	tracker = t
-	custom_minimum_size = Vector2(0, 230.0 if kind == "fascist" else 150.0)
+	custom_minimum_size = Vector2(0, 300.0 if kind == "fascist" else 200.0)
 	queue_redraw()
 
 
@@ -68,13 +68,14 @@ func _draw() -> void:
 		draw_rect(r, slot_c)
 		draw_rect(r, acc, false, 2.0)
 		if fas and i == 5:
-			_skull(c + Vector2(0, -8), minf(cw, ch) * 0.3, slot_c, acc)
-			draw_string(font, Vector2(r.position.x, r.end.y + 16), "Consejero El Esclavista", HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, acc)
+			PolicyCard.draw_symbol(self, "crown", c, 0.9, acc)
+			draw_multiline_string(font, Vector2(r.position.x, r.end.y + 16), "Consejero El Esclavista", HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, -1, acc)
 			continue
 		if i < enacted:
 			var fillc := Color("#c0392b") if fas else Color("#2e86c1")
 			draw_rect(r.grow(-7.0), fillc)
-			draw_string(font, Vector2(c.x - 10, c.y + 9), "F" if fas else "L", HORIZONTAL_ALIGNMENT_CENTER, 20, 28, CREAM)
+		elif not fas and i == 4:
+			PolicyCard.draw_symbol(self, "cap", c, 0.9, acc)
 		elif fas:
 			var pw: String = powers[i] if i < powers.size() else ""
 			if pw != "":
@@ -87,15 +88,9 @@ func _draw() -> void:
 			draw_rect(r.grow(5.0), Color(acc.r, acc.g, acc.b, pulse), false, 4.0)
 
 	if fas:
-		draw_string(font, Vector2(pad, size.y - 12.0), "El Esclavista canciller tras la 3.ª fascista = victoria fascista", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, acc)
-
-
-
-func _skull(c: Vector2, s: float, bg: Color, acc: Color) -> void:
-	draw_circle(c, s, acc)
-	draw_rect(Rect2(c.x - s * 0.5, c.y + s * 0.4, s, s * 0.45), acc)
-	draw_circle(c + Vector2(-s * 0.4, -s * 0.1), s * 0.28, bg)
-	draw_circle(c + Vector2(s * 0.4, -s * 0.1), s * 0.28, bg)
+		draw_multiline_string(font, Vector2(pad, 212.0), "Si El Esclavista es elegido Consejero tras la tercera política tirana, los TIRANOS ganan automáticamente.", HORIZONTAL_ALIGNMENT_CENTER, size.x - pad * 2.0, 15, -1, acc)
+	else:
+		draw_multiline_string(font, Vector2(pad, 160.0), "Si El Esclavista es ejecutado, los LIBERTADORES ganan automáticamente.", HORIZONTAL_ALIGNMENT_CENTER, size.x - pad * 2.0, 15, -1, acc)
 
 
 func _icon(ic: String, c: Vector2, s: float, col: Color) -> void:
