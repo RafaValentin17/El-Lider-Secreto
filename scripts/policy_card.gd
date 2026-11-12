@@ -16,6 +16,8 @@ var role := ""
 var label_text := ""
 var label_col := Color.WHITE
 var face_up := true
+var is_thumb := false
+var thumb_up := true
 
 
 func setup(k: String, up: bool = true, sz: Vector2 = Vector2(96, 136)) -> void:
@@ -25,8 +27,18 @@ func setup(k: String, up: bool = true, sz: Vector2 = Vector2(96, 136)) -> void:
 	_init_size(sz)
 
 
+func setup_thumb(up: bool, sz: Vector2 = Vector2(150, 200)) -> void:
+	mode = "label"
+	is_thumb = true
+	thumb_up = up
+	label_text = Txt.JA if up else Txt.NEIN
+	face_up = true
+	_init_size(sz)
+
+
 func setup_label(text: String, col: Color, sz: Vector2 = Vector2(150, 200)) -> void:
 	mode = "label"
+	is_thumb = false
 	label_text = text
 	label_col = col
 	face_up = true
@@ -119,56 +131,92 @@ func _draw() -> void:
 			_draw_policy(r)
 
 
+const BLACK := Color("#0d0d0d")
+const ACC_LIB := Color("#9fd8ff")
+const ACC_FAS := Color("#e0463c")
+const ACC_HIT := Color("#f2c14e")
+const FIST := Color("#d9b26a")
+
+
 func _draw_policy(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
 	var is_lib := kind == "L"
-	var base: Color = BLUE if is_lib else RED
-	draw_rect(r, base)
-	draw_rect(r, INK, false, 4.0)
-	draw_rect(r.grow(-5.0), CREAM)
-	draw_rect(Rect2(Vector2(5, 5), Vector2(size.x - 10, 28)), base)
-	draw_string(font, Vector2(8, 25), "LIBERTADOR" if is_lib else "TIRANO", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, CREAM)
+	var acc: Color = ACC_LIB if is_lib else ACC_FAS
+	draw_rect(r, BLACK)
+	draw_rect(r, acc, false, 3.0)
+	draw_rect(r.grow(-6.0), acc, false, 1.5)
+	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 28)), Color("#1c1c1c"))
+	draw_string(font, Vector2(8, 27), "LIBERTADOR" if is_lib else "TIRANO", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.5 + 8.0)
 	var s := minf(size.x, size.y) / 96.0
 	if is_lib:
-		draw_circle(c, 22.0 * s, base)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(-22, 0) * s, c + Vector2(-38, -14) * s, c + Vector2(-30, 10) * s]), base)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(22, 0) * s, c + Vector2(38, -14) * s, c + Vector2(30, 10) * s]), base)
+		draw_circle(c, 22.0 * s, acc)
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-22, 0) * s, c + Vector2(-38, -14) * s, c + Vector2(-30, 10) * s]), acc)
+		draw_colored_polygon(PackedVector2Array([c + Vector2(22, 0) * s, c + Vector2(38, -14) * s, c + Vector2(30, 10) * s]), acc)
 	else:
-		draw_line(c + Vector2(-20, -20) * s, c + Vector2(20, 20) * s, base, 6.0 * s)
-		draw_line(c + Vector2(20, -20) * s, c + Vector2(-20, 20) * s, base, 6.0 * s)
-		draw_circle(c, 10.0 * s, base)
-	draw_string(font, Vector2(6, size.y - 12), Txt.LIB_POL if is_lib else Txt.FAS_POL, HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 11, base)
+		draw_line(c + Vector2(-20, -20) * s, c + Vector2(20, 20) * s, acc, 6.0 * s)
+		draw_line(c + Vector2(20, -20) * s, c + Vector2(-20, 20) * s, acc, 6.0 * s)
+		draw_circle(c, 10.0 * s, acc)
+	draw_string(font, Vector2(6, size.y - 12), Txt.LIB_POL if is_lib else Txt.FAS_POL, HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 11, acc)
 
 
 func _draw_role(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
-	var col: Color = BLUE if role == "liberal" else (RED if role == "fascist" else DARK)
-	draw_rect(r, col)
-	draw_rect(r, INK, false, 4.0)
-	draw_rect(r.grow(-6.0), CREAM)
-	draw_rect(Rect2(Vector2(6, 6), Vector2(size.x - 12, 40)), col)
-	draw_string(font, Vector2(6, 34), "Tu rol secreto", HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 16, CREAM)
+	var acc: Color = ACC_LIB if role == "liberal" else (ACC_FAS if role == "fascist" else ACC_HIT)
+	draw_rect(r, BLACK)
+	draw_rect(r, acc, false, 3.0)
+	draw_rect(r.grow(-6.0), acc, false, 1.5)
+	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 36)), Color("#1c1c1c"))
+	draw_string(font, Vector2(6, 33), "Tu rol secreto", HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 16, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.42)
 	if role == "liberal":
-		draw_circle(c, 34.0, BLUE)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(-34, 0), c + Vector2(-54, -18), c + Vector2(-46, 14)]), BLUE)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(34, 0), c + Vector2(54, -18), c + Vector2(46, 14)]), BLUE)
+		draw_circle(c, 34.0, acc)
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-34, 0), c + Vector2(-54, -18), c + Vector2(-46, 14)]), acc)
+		draw_colored_polygon(PackedVector2Array([c + Vector2(34, 0), c + Vector2(54, -18), c + Vector2(46, 14)]), acc)
 	elif role == "fascist":
-		draw_line(c + Vector2(-30, -30), c + Vector2(30, 30), RED, 9.0)
-		draw_line(c + Vector2(30, -30), c + Vector2(-30, 30), RED, 9.0)
-		draw_circle(c, 12.0, RED)
+		draw_line(c + Vector2(-30, -30), c + Vector2(30, 30), acc, 9.0)
+		draw_line(c + Vector2(30, -30), c + Vector2(-30, 30), acc, 9.0)
+		draw_circle(c, 12.0, acc)
 	else:
-		draw_circle(c, 34.0, DARK)
-		draw_circle(c + Vector2(-12, -4), 8.0, CREAM)
-		draw_circle(c + Vector2(12, -4), 8.0, CREAM)
-	draw_string(font, Vector2(6, size.y * 0.72), Txt.ROLE_NAME[role], HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 22, col)
+		draw_circle(c, 34.0, acc)
+		draw_circle(c + Vector2(-12, -4), 8.0, BLACK)
+		draw_circle(c + Vector2(12, -4), 8.0, BLACK)
+	draw_string(font, Vector2(6, size.y * 0.72), Txt.ROLE_NAME[role], HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 22, acc)
 
 
 func _draw_label(r: Rect2) -> void:
+	if is_thumb:
+		_draw_thumb(r)
+		return
 	var font := ThemeDB.fallback_font
 	draw_rect(r, label_col)
 	draw_rect(r, INK, false, 4.0)
 	draw_rect(r.grow(-6.0), label_col.darkened(0.25), false, 3.0)
 	draw_string(font, Vector2(8, size.y * 0.52), label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 30, CREAM)
 	draw_string(font, Vector2(8, size.y - 16), "▲ desliza", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 14, CREAM)
+
+
+## Puño con el pulgar hacia arriba (¡Ja!) o hacia abajo (¡Nein!).
+func _draw_thumb(r: Rect2) -> void:
+	var font := ThemeDB.fallback_font
+	var acc := ACC_HIT
+	draw_rect(r, BLACK)
+	draw_rect(r, acc, false, 3.0)
+	draw_rect(r.grow(-6.0), acc, false, 1.5)
+	var c := Vector2(size.x * 0.5, size.y * 0.46)
+	# Pulgar.
+	var th := Rect2(c.x - 34.0, c.y - 10.0 + (-50.0 if thumb_up else 6.0), 26.0, 50.0)
+	draw_rect(th, FIST)
+	draw_rect(th, INK, false, 2.0)
+	# Palma con los dedos.
+	var palm := Rect2(c.x - 34.0, c.y - 10.0, 68.0, 56.0)
+	draw_rect(palm, FIST)
+	draw_rect(palm, INK, false, 2.5)
+	for k in range(1, 4):
+		var yy := palm.position.y + k * 14.0
+		draw_line(Vector2(palm.position.x + 4.0, yy), Vector2(palm.end.x - 4.0, yy), INK, 2.0)
+	# Muñeca en granate.
+	var wrist := Rect2(c.x - 40.0, c.y + (46.0 if thumb_up else -62.0), 80.0, 16.0)
+	draw_rect(wrist, Color("#6b1020"))
+	draw_rect(wrist, acc, false, 2.0)
+	draw_string(font, Vector2(8, size.y - 16), label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 24, acc)

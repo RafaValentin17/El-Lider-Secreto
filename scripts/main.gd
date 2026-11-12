@@ -664,9 +664,9 @@ func _show_vote_card(i: int, k: int) -> void:
 	_lbl("%s propuesto: %s" % [Txt.CHAN, _pname(game.nominee)], 24, GOLD)
 	_end_panel()
 	var ja := SwipeCard.new()
-	ja.setup_label(Txt.JA, GREEN, Vector2(150, 200))
+	ja.setup_thumb(true, Vector2(150, 200))
 	var nein := SwipeCard.new()
-	nein.setup_label(Txt.NEIN, RED, Vector2(150, 200))
+	nein.setup_thumb(false, Vector2(150, 200))
 	_stage([ja, nein], _vote_pick.bind(i, k), "Desliza hacia arriba la carta de tu voto")
 
 
@@ -1156,9 +1156,9 @@ func _render_online_board() -> void:
 				_lbl("Voto enviado. Esperando a los demás (%d/%d)." % [d["votes_in"], _count_true(alive)], 18, MUTED)
 			else:
 				var ja := SwipeCard.new()
-				ja.setup_label(Txt.JA, GREEN, Vector2(150, 200))
+				ja.setup_thumb(true, Vector2(150, 200))
 				var nein := SwipeCard.new()
-				nein.setup_label(Txt.NEIN, RED, Vector2(150, 200))
+				nein.setup_thumb(false, Vector2(150, 200))
 				_stage([ja, nein], _online_pick.bind("vote"), "Desliza hacia arriba la carta de tu voto")
 		"discard_pres":
 			if seat == pres:

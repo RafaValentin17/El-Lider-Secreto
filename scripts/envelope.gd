@@ -124,6 +124,7 @@ func _card_out() -> void:
 	card.position = Vector2(CARD_IN.x, TOP + 60.0)
 	card.modulate.a = 0.0
 	card.visible = true
+	card.z_index = 2
 	Sfx.play("swish")
 	set_hint("Toca para voltear la carta")
 	var tw := create_tween()
@@ -161,6 +162,7 @@ func _on_card_swipe(_c) -> void:
 
 func _close_flap() -> void:
 	card.visible = false
+	card.z_index = -1
 	card.done = false
 	shown = false
 	Sfx.play("close")

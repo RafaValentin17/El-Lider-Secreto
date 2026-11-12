@@ -16,7 +16,7 @@ var rot := 0.0
 
 func set_players(n: Array) -> void:
 	names = n
-	custom_minimum_size = Vector2(340, 340)
+	custom_minimum_size = Vector2(480, 480)
 	queue_redraw()
 
 
