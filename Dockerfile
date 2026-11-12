@@ -1,4 +1,4 @@
-# Servidor de partidas de El Líder Secreto (Godot 4.7 headless).
+# Servidor de partidas de La Corona Real (Godot 4.7 headless).
 FROM debian:bookworm-slim
 
 RUN apt-get update \

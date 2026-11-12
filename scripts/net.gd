@@ -74,7 +74,7 @@ func start_server(port: int) -> void:
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_disconnected.connect(_on_peer_gone)
-	print("El Líder Secreto: servidor escuchando en el puerto %d" % port)
+	print("La Corona Real: servidor escuchando en el puerto %d" % port)
 
 
 @rpc("any_peer", "reliable")

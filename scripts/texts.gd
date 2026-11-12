@@ -2,7 +2,7 @@ class_name Txt
 extends RefCounted
 ## Textos de la interfaz con los nombres del juego original (version en espanol).
 
-const TITLE := "El Líder Secreto"
+const TITLE := "La Corona Real"
 const LIB := "Libertador"
 const FAS := "Tirano"
 const HIT := "El Esclavista"

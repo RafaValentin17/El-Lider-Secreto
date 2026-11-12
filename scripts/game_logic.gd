@@ -1,6 +1,6 @@
 class_name GameLogic
 extends RefCounted
-## Reglas puras de El Líder Secreto (sin interfaz).
+## Reglas puras de La Corona Real (sin interfaz).
 ## Equivalencias: LIBERTADOR = Juez, FASCIST = Cartel, HITLER = Consejero Corrupto.
 ## Cartas: "L" = Ley Justa, "F" = Ley Corrupta. La carta de arriba del mazo es la ultima del array.
 
