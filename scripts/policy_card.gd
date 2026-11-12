@@ -149,14 +149,7 @@ func _draw_policy(r: Rect2) -> void:
 	draw_string(font, Vector2(8, 27), "LIBERTADOR" if is_lib else "TIRANO", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.5 + 8.0)
 	var s := minf(size.x, size.y) / 96.0
-	if is_lib:
-		draw_circle(c, 22.0 * s, acc)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(-22, 0) * s, c + Vector2(-38, -14) * s, c + Vector2(-30, 10) * s]), acc)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(22, 0) * s, c + Vector2(38, -14) * s, c + Vector2(30, 10) * s]), acc)
-	else:
-		draw_line(c + Vector2(-20, -20) * s, c + Vector2(20, 20) * s, acc, 6.0 * s)
-		draw_line(c + Vector2(20, -20) * s, c + Vector2(-20, 20) * s, acc, 6.0 * s)
-		draw_circle(c, 10.0 * s, acc)
+	_symbol("cap" if is_lib else "crown", c, 1.0 * s, acc)
 	draw_string(font, Vector2(6, size.y - 12), Txt.LIB_POL if is_lib else Txt.FAS_POL, HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 11, acc)
 
 
@@ -169,18 +162,8 @@ func _draw_role(r: Rect2) -> void:
 	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 36)), Color("#1c1c1c"))
 	draw_string(font, Vector2(6, 33), "Tu rol secreto", HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 16, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.42)
-	if role == "liberal":
-		draw_circle(c, 34.0, acc)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(-34, 0), c + Vector2(-54, -18), c + Vector2(-46, 14)]), acc)
-		draw_colored_polygon(PackedVector2Array([c + Vector2(34, 0), c + Vector2(54, -18), c + Vector2(46, 14)]), acc)
-	elif role == "fascist":
-		draw_line(c + Vector2(-30, -30), c + Vector2(30, 30), acc, 9.0)
-		draw_line(c + Vector2(30, -30), c + Vector2(-30, 30), acc, 9.0)
-		draw_circle(c, 12.0, acc)
-	else:
-		draw_circle(c, 34.0, acc)
-		draw_circle(c + Vector2(-12, -4), 8.0, BLACK)
-		draw_circle(c + Vector2(12, -4), 8.0, BLACK)
+	var sym := "cap" if role == "liberal" else ("crown" if role == "fascist" else "chain")
+	_symbol(sym, c, 1.6, acc)
 	draw_string(font, Vector2(6, size.y * 0.72), Txt.ROLE_NAME[role], HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 22, acc)
 
 
@@ -228,3 +211,26 @@ func _draw_thumb(r: Rect2) -> void:
 	var cuff_y := c.y + 40.0 if thumb_up else c.y - 58.0
 	draw_rect(Rect2(c.x - 50.0, cuff_y, 100.0, 18.0), acc)
 	draw_rect(Rect2(c.x - 50.0, cuff_y, 100.0, 18.0), outline, false, 2.0)
+
+
+## Símbolos: gorro de la libertad (libertadores), corona (tiranos) y cadenas (El Esclavista).
+func _symbol(kind: String, c: Vector2, sc: float, col: Color) -> void:
+	match kind:
+		"cap":
+			var pts := PackedVector2Array([
+				c + Vector2(-26, 20) * sc, c + Vector2(-24, -4) * sc, c + Vector2(-12, -16) * sc,
+				c + Vector2(4, -28) * sc, c + Vector2(20, -14) * sc, c + Vector2(26, 20) * sc])
+			draw_colored_polygon(pts, col)
+			draw_rect(Rect2(c + Vector2(-30, 16) * sc, Vector2(60, 9) * sc), col)
+		"crown":
+			draw_colored_polygon(PackedVector2Array([
+				c + Vector2(-30, 16) * sc, c + Vector2(-30, -16) * sc, c + Vector2(-14, 2) * sc,
+				c + Vector2(0, -22) * sc, c + Vector2(14, 2) * sc, c + Vector2(30, -16) * sc,
+				c + Vector2(30, 16) * sc]), col)
+			draw_rect(Rect2(c + Vector2(-30, 20) * sc, Vector2(60, 8) * sc), col)
+			for x in [-30.0, 0.0, 30.0]:
+				draw_circle(c + Vector2(x, -18 if x != 0.0 else -26) * sc, 4.0 * sc, col)
+		"chain":
+			draw_arc(c + Vector2(-14, 0) * sc, 14.0 * sc, 0.0, TAU, 28, col, 6.0 * sc)
+			draw_arc(c + Vector2(14, 0) * sc, 14.0 * sc, 0.0, TAU, 28, col, 6.0 * sc)
+			draw_rect(Rect2(c + Vector2(-6, -4) * sc, Vector2(12, 8) * sc), col)
