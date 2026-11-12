@@ -8,7 +8,7 @@ const FAS := "Tirano"
 const HIT := "El Esclavista"
 const PRES := "Rey"
 const CHAN := "Consejero"
-const LIB_POL := "Política liberal"
+const LIB_POL := "Política libertadora"
 const FAS_POL := "Política tiránica"
 const TRACK := "Marcador de elecciones"
 const DRAW := "Pila de robar"
@@ -16,7 +16,7 @@ const DISCARD := "Pila de descarte"
 const JA := "¡Ja!"
 const NEIN := "¡Nein!"
 
-const ROLE_NAME := {"liberal": "LIBERTADOR", "fascist": "TIRANO", "hitler": "HITLER"}
+const ROLE_NAME := {"liberal": "LIBERTADOR", "fascist": "TIRANO", "hitler": "EL ESCLAVISTA"}
 const ROLE_DESC := {
 	"liberal": "Eres Libertador. Ganas si se promulgan 5 políticas libertadoras o si matáis a El Esclavista. No sabes quién es quién.",
 	"fascist": "Eres Tirano. Ganas si se promulgan 6 políticas tiránicas, o si El Esclavista llega a Consejero tras la tercera política tiránica. Conoces a El Esclavista.",
@@ -43,7 +43,7 @@ Poderes: ojeada a las tres siguientes políticas; investigar lealtad (cada jugad
 
 Límites de mandato: el Consejero anterior nunca puede repetir. En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.
 
-Créditos: basado en Secret El Esclavista (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Esta versión cambia la maquetación y los textos. Uso no comercial."""
+Créditos: basado en Secret Hitler (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Esta versión cambia la maquetación y los textos. Uso no comercial."""
 
 ## Reglas por secciones: cada una con su color, sus puntos y un ejemplo.
 const RULE_SECTIONS := [
@@ -54,7 +54,7 @@ const RULE_SECTIONS := [
 			"Libertadores: promulgar 5 políticas libertadoras, o matar a El Esclavista.",
 			"Tiranos: promulgar 6 políticas tiránicas, o que El Esclavista llegue a Consejero tras la 3.ª política tiránica.",
 		],
-		"example": "Ya hay 3 políticas tiránicas en el tablero. Si El Esclavista sale elegido Consejero en una votación que gana, el equipo fascista gana al instante.",
+		"example": "Ya hay 3 políticas tiránicas en el tablero. Si El Esclavista sale elegido Consejero en una votación que gana, el equipo tirano gana al instante.",
 	},
 	{
 		"title": "2. Equipos y reparto",
@@ -62,8 +62,8 @@ const RULE_SECTIONS := [
 		"lines": [
 			"Libertadores: la mayoría. No saben quién es quién.",
 			"Tiranos: conocen a El Esclavista desde el principio.",
-			"El Esclavista: lidera el equipo fascista.",
-			"Con 5 jugadores: 3 libertadores, 1 fascista y El Esclavista.",
+			"El Esclavista: lidera el equipo tirano.",
+			"Con 5 jugadores: 3 libertadores, 1 tirano y El Esclavista.",
 		],
 		"example": "Partida de 5: cada jugador recibe en secreto una carta de rol. Una de ellas es El Esclavista, otra es Tirano y las otras tres son Libertadores.",
 	},
@@ -71,9 +71,9 @@ const RULE_SECTIONS := [
 		"title": "3. Preparación",
 		"color": "#2d4a3e",
 		"lines": [
-			"Pila de robar: 6 políticas libertadoras y 11 tiranos, mezcladas boca abajo.",
+			"Pila de robar: 6 políticas libertadoras y 11 tiránicas, mezcladas boca abajo.",
 			"El primer Rey se elige al azar.",
-			"Con 5 o 6 jugadores, El Esclavista sabe quién es el fascista. Con 7 a 10, no.",
+			"Con 5 o 6 jugadores, El Esclavista sabe quién es el Tirano. Con 7 a 10, no.",
 		],
 		"example": "Al empezar, cada jugador mira su carta en secreto. Después se entrega el marcador de Rey al jugador elegido al azar.",
 	},
@@ -85,7 +85,7 @@ const RULE_SECTIONS := [
 			"El Consejero anterior nunca puede repetir.",
 			"En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.",
 		],
-		"example": "Partida de 7. El gobierno anterior fue Ana de Presidenta y Luis de Consejero. La siguiente ronda pasa a Marta, que no puede proponer a Luis, ni a Ana si Ana fue Presidenta.",
+		"example": "Partida de 7. El gobierno anterior fue Ana de Rey y Luis de Consejero. La siguiente ronda pasa a Marta, que no puede proponer a Luis, ni a Ana si Ana fue Rey.",
 	},
 	{
 		"title": "5. Votación",
@@ -115,7 +115,7 @@ const RULE_SECTIONS := [
 			"Pasa las 2 restantes al Consejero, que mira en secreto, descarta 1 y promulga la otra.",
 			"Durante la sesión no se puede hablar ni hacer señas.",
 		],
-		"example": "El Rey roba liberal, fascista y fascista. Descarta un fascista y pasa liberal y fascista. El Consejero descarta el fascista y promulga la liberal.",
+		"example": "El Rey roba libertadora, tiránica y tiránica. Descarta una tiránica y pasa libertadora y tiránica. El Consejero descarta la tiránica y promulga la libertadora.",
 	},
 	{
 		"title": "8. Poderes de las políticas tiránicas",
@@ -148,13 +148,13 @@ const RULE_SECTIONS := [
 			"El Esclavista solo está obligado a decir la verdad si lo asesinan o si llega a Consejero tras 3 tiranos.",
 			"Los tiranos ganan sobre todo eligiendo a El Esclavista como Consejero.",
 		],
-		"example": "Un liberal investiga a Marta, que es Tirano, y dice que es Libertador. Mentir sobre lo que se sabe en secreto está permitido.",
+		"example": "Un libertador investiga a Marta, que es Tirana, y dice que es Libertadora. Mentir sobre lo que se sabe en secreto está permitido.",
 	},
 	{
 		"title": "Créditos",
 		"color": "#333333",
 		"lines": [
-			"Basado en Secret El Esclavista (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Uso no comercial.",
+			"Basado en Secret Hitler (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Uso no comercial.",
 		],
 	},
 ]
