@@ -313,41 +313,67 @@ func _nav_btn(row: HBoxContainer, text: String, cb: Callable, enabled: bool) -> 
 func show_setup() -> void:
 	_clear(true)
 	_lbl("Nueva partida", 34, GOLD)
-	var spin := SpinBox.new()
-	spin.min_value = 5
-	spin.max_value = 10
-	spin.step = 1
-	spin.value = player_count
-	spin.custom_minimum_size = Vector2(0, 70)
-	spin.value_changed.connect(_on_count_changed)
-	cur.add_child(spin)
+	_lbl("¿Cuántos jugadores?", 22, MUTED)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	cur.add_child(row)
+	for n in [5, 6, 7, 8, 9, 10]:
+		var sel: bool = n == player_count
+		var b := Button.new()
+		b.text = str(n)
+		b.custom_minimum_size = Vector2(0, 90)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", int(30 * TXT))
+		b.add_theme_color_override("font_color", DARK if sel else CREAM)
+		b.add_theme_stylebox_override("normal", _sb(GOLD if sel else Color("#2f6f8f")))
+		b.add_theme_stylebox_override("hover", _sb(Color("#3a82a6")))
+		b.add_theme_stylebox_override("pressed", _sb(Color("#245a72")))
+		b.pressed.connect(Sfx.play.bind("tap"))
+		b.pressed.connect(_set_count.bind(n))
+		row.add_child(b)
 	_lbl("Nombres (si lo dejas vacío se llamará Jugador N)", 18, MUTED)
+	while saved_names.size() < player_count:
+		saved_names.append("")
 	name_edits = []
 	for i in player_count:
-		var e := LineEdit.new()
-		e.placeholder_text = "Jugador %d" % (i + 1)
-		e.custom_minimum_size = Vector2(0, 70)
-		e.add_theme_font_size_override("font_size", 22)
-		if i < saved_names.size():
-			e.text = saved_names[i]
-		cur.add_child(e)
-		name_edits.append(e)
+		if OS.has_feature("web"):
+			var shown: String = String(saved_names[i]) if String(saved_names[i]) != "" else "Jugador %d" % (i + 1)
+			_btn("Jugador %d: %s" % [i + 1, shown], _ask_name.bind(i), Color("#33465f"))
+		else:
+			var e := LineEdit.new()
+			e.placeholder_text = "Jugador %d" % (i + 1)
+			e.text = String(saved_names[i])
+			e.custom_minimum_size = Vector2(0, 70)
+			e.add_theme_font_size_override("font_size", int(22 * TXT))
+			e.text_changed.connect(_set_name.bind(i))
+			cur.add_child(e)
+			name_edits.append(e)
 	_btn("Empezar", _start_game, GREEN)
 	_btn("Volver", show_menu)
 
 
-func _on_count_changed(v: float) -> void:
-	saved_names = []
-	for e in name_edits:
-		saved_names.append(e.text)
-	player_count = int(v)
-	call_deferred("show_setup")
+func _set_count(n: int) -> void:
+	player_count = n
+	show_setup()
+
+
+func _set_name(t: String, i: int) -> void:
+	saved_names[i] = t
+
+
+## Cuadro nativo del navegador para escribir el nombre (funciona en móviles).
+func _ask_name(i: int) -> void:
+	var current := String(saved_names[i])
+	var res = JavaScriptBridge.eval("prompt(%s, %s)" % [JSON.stringify("Nombre del jugador %d" % (i + 1)), JSON.stringify(current)])
+	if res != null:
+		saved_names[i] = String(res).strip_edges()
+	show_setup()
 
 
 func _start_game() -> void:
 	var names: Array = []
-	for i in name_edits.size():
-		var t: String = name_edits[i].text.strip_edges()
+	for i in player_count:
+		var t: String = String(saved_names[i]).strip_edges() if i < saved_names.size() else ""
 		if t == "":
 			t = "Jugador %d" % (i + 1)
 		names.append(t)
