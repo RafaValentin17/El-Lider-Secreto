@@ -626,7 +626,7 @@ func _show_vote_result() -> void:
 # ---------- legislación ----------
 
 func _show_discard_pres() -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tus 3 políticas (en secreto)", 24, GOLD)
 	_lbl("Las cartas llegan desde la pila de robar.", 17, MUTED)
@@ -646,7 +646,7 @@ func _discard_pres(idx: int) -> void:
 
 
 func _show_chancellor() -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tus 2 políticas (en secreto)", 24, GOLD)
 	_lbl("Promulga una. La otra se descarta en secreto.", 17, MUTED)
