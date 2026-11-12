@@ -30,6 +30,7 @@ var vote_map: Dictionary = {}
 var last_draw := 0
 var last_discard := 0
 var pending_pulse: Array = []
+var setup_names: Array = []
 var sound_btn: Button
 var center_screen := false
 var rules_page := 0
@@ -313,41 +314,41 @@ func _nav_btn(row: HBoxContainer, text: String, cb: Callable, enabled: bool) -> 
 func show_setup() -> void:
 	_clear(true)
 	_lbl("Nueva partida", 34, GOLD)
-	_lbl("¿Cuántos jugadores?", 22, MUTED)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	cur.add_child(row)
-	for n in [5, 6, 7, 8, 9, 10]:
-		var sel: bool = n == player_count
+	_lbl("¿Cuántos jugadores?", 22, CREAM)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
+	cur.add_child(grid)
+	for n in range(5, 11):
 		var b := Button.new()
 		b.text = str(n)
-		b.custom_minimum_size = Vector2(0, 90)
+		b.custom_minimum_size = Vector2(0, 110)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", int(30 * TXT))
-		b.add_theme_color_override("font_color", DARK if sel else CREAM)
-		b.add_theme_stylebox_override("normal", _sb(GOLD if sel else Color("#2f6f8f")))
-		b.add_theme_stylebox_override("hover", _sb(Color("#3a82a6")))
-		b.add_theme_stylebox_override("pressed", _sb(Color("#245a72")))
+		b.add_theme_font_size_override("font_size", int(40 * TXT))
+		b.add_theme_color_override("font_color", CREAM)
+		var col: Color = GREEN if n == player_count else Color("#2f6f8f")
+		b.add_theme_stylebox_override("normal", _sb(col))
+		b.add_theme_stylebox_override("hover", _sb(col.lightened(0.15)))
+		b.add_theme_stylebox_override("pressed", _sb(col.darkened(0.25)))
 		b.pressed.connect(Sfx.play.bind("tap"))
 		b.pressed.connect(_set_count.bind(n))
-		row.add_child(b)
-	_lbl("Nombres (si lo dejas vacío se llamará Jugador N)", 18, MUTED)
-	while saved_names.size() < player_count:
-		saved_names.append("")
-	name_edits = []
+		grid.add_child(b)
+	_lbl("Nombres de los jugadores", 20, CREAM)
+	while setup_names.size() < 10:
+		setup_names.append("")
 	for i in player_count:
 		if OS.has_feature("web"):
-			var shown: String = String(saved_names[i]) if String(saved_names[i]) != "" else "Jugador %d" % (i + 1)
-			_btn("Jugador %d: %s" % [i + 1, shown], _ask_name.bind(i), Color("#33465f"))
+			_btn("%d. %s" % [i + 1, _name_or_default(i)], _ask_name.bind(i), Color("#33465f"))
 		else:
 			var e := LineEdit.new()
 			e.placeholder_text = "Jugador %d" % (i + 1)
-			e.text = String(saved_names[i])
+			e.text = setup_names[i]
 			e.custom_minimum_size = Vector2(0, 70)
 			e.add_theme_font_size_override("font_size", int(22 * TXT))
-			e.text_changed.connect(_set_name.bind(i))
+			var idx := i
+			e.text_changed.connect(func(t: String): setup_names[idx] = t)
 			cur.add_child(e)
-			name_edits.append(e)
 	_btn("Empezar", _start_game, GREEN)
 	_btn("Volver", show_menu)
 
@@ -357,23 +358,22 @@ func _set_count(n: int) -> void:
 	show_setup()
 
 
-func _set_name(t: String, i: int) -> void:
-	saved_names[i] = t
+func _name_or_default(i: int) -> String:
+	return String(setup_names[i]) if String(setup_names[i]) != "" else "Jugador %d" % (i + 1)
 
 
-## Cuadro nativo del navegador para escribir el nombre (funciona en móviles).
+## Abre el cuadro nativo del navegador para escribir el nombre (funciona en móviles).
 func _ask_name(i: int) -> void:
-	var current := String(saved_names[i])
-	var res = JavaScriptBridge.eval("prompt(%s, %s)" % [JSON.stringify("Nombre del jugador %d" % (i + 1)), JSON.stringify(current)])
+	var res = JavaScriptBridge.eval("prompt(%s, %s)" % [JSON.stringify("Nombre del jugador %d" % (i + 1)), JSON.stringify(String(setup_names[i]))])
 	if res != null:
-		saved_names[i] = String(res).strip_edges()
+		setup_names[i] = String(res).strip_edges()
 	show_setup()
 
 
 func _start_game() -> void:
 	var names: Array = []
 	for i in player_count:
-		var t: String = String(saved_names[i]).strip_edges() if i < saved_names.size() else ""
+		var t: String = String(setup_names[i]).strip_edges()
 		if t == "":
 			t = "Jugador %d" % (i + 1)
 		names.append(t)
@@ -398,7 +398,7 @@ func _show_role(i: int) -> void:
 	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tu sobre secreto", 26, GOLD)
-	_lbl("Tócalo para abrirlo. Toca la carta para verla y desliza hacia arriba para guardarla.", 17, MUTED)
+	_lbl("Solo tú puedes ver tu rol.", 17, MUTED)
 	_end_panel()
 	var center := CenterContainer.new()
 	cur.add_child(center)
@@ -937,7 +937,7 @@ func _show_online_role(d: Dictionary) -> void:
 	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tu sobre secreto", 26, GOLD)
-	_lbl("Tócalo para abrirlo. Toca la carta para verla y desliza hacia arriba para guardarla.", 17, MUTED)
+	_lbl("Solo tú puedes ver tu rol.", 17, MUTED)
 	_end_panel()
 	var center := CenterContainer.new()
 	cur.add_child(center)
