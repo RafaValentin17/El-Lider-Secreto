@@ -15,9 +15,12 @@ const SOUNDS := {
 	"fail": [{"f0": 300.0, "f1": 150.0, "d": 0.35, "v": 0.40}],
 }
 static var cache: Dictionary = {}
+static var muted := false
 
 
 static func play(sound: String) -> void:
+	if muted:
+		return
 	if not SOUNDS.has(sound):
 		return
 	if not cache.has(sound):

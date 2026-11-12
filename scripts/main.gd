@@ -4,12 +4,13 @@ extends Control
 const CREAM := Color("#f5f0e1")
 const GOLD := Color("#f2c14e")
 const MUTED := Color("#9fb3c8")
-const BLUE := Color("#1f5f9e")
-const RED := Color("#a3262b")
+const BLUE := Color("#2f6f8f")
+const RED := Color("#b5452b")
 const DARK := Color("#3b0d0d")
-const NAVY := Color("#1d2a44")
-const GREEN := Color("#2c7a4b")
+const NAVY := Color("#33413a")
+const GREEN := Color("#4f7d3a")
 const GREY := Color("#4a4a5e")
+const INK := Color("#2b1d0e")
 
 var scroll: ScrollContainer
 var margin: MarginContainer
@@ -28,6 +29,9 @@ var vote_map: Dictionary = {}
 var last_draw := 0
 var last_discard := 0
 var pending_pulse: Array = []
+var sound_btn: Button
+var center_screen := false
+var rules_page := 0
 var net: Net
 var online_url := "wss://el-lider-secreto-server.onrender.com"
 var online_name := ""
@@ -44,25 +48,29 @@ var online_code_edit: LineEdit
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(BackgroundView.new())
-	scroll = ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.get_v_scroll_bar().custom_minimum_size = Vector2(28, 0)
-	add_child(scroll)
-	margin = MarginContainer.new()
-	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 20)
-	scroll.add_child(margin)
 	box = VBoxContainer.new()
-	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_theme_constant_override("separation", 14)
-	margin.add_child(box)
+	add_child(box)
 	cur = box
 	overlay = Control.new()
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(overlay)
+	sound_btn = Button.new()
+	sound_btn.add_theme_font_size_override("font_size", 18)
+	sound_btn.add_theme_color_override("font_color", CREAM)
+	sound_btn.add_theme_stylebox_override("normal", _sb(Color("#3b2a1a")))
+	sound_btn.add_theme_stylebox_override("hover", _sb(Color("#4d3822")))
+	sound_btn.add_theme_stylebox_override("pressed", _sb(Color("#2a1d10")))
+	sound_btn.anchor_left = 1.0
+	sound_btn.anchor_right = 1.0
+	sound_btn.offset_left = -170
+	sound_btn.offset_right = -10
+	sound_btn.offset_top = 10
+	sound_btn.offset_bottom = 56
+	sound_btn.pressed.connect(_toggle_sound)
+	add_child(sound_btn)
+	_update_sound_btn()
 	net = Net.new()
 	net.name = "Net"
 	add_child(net)
@@ -78,19 +86,24 @@ func _ready() -> void:
 
 # ---------- ayudas de interfaz ----------
 
-func _clear() -> void:
+func _clear(center: bool = false) -> void:
+	center_screen = center
 	for c in box.get_children():
 		box.remove_child(c)
 		c.queue_free()
 	cur = box
 	stack = []
-	scroll.scroll_vertical = 0
 
 
 func _sb(col: Color) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = col
-	s.set_corner_radius_all(16)
+	s.set_corner_radius_all(14)
+	s.set_border_width_all(4)
+	s.border_color = INK
+	s.shadow_color = Color(0, 0, 0, 0.35)
+	s.shadow_size = 4
+	s.shadow_offset = Vector2(3, 5)
 	s.content_margin_left = 14
 	s.content_margin_right = 14
 	s.content_margin_top = 12
@@ -232,7 +245,7 @@ func _join(arr: Array) -> String:
 
 ## Pantalla intermedia: el siguiente jugador toma el móvil.
 func _pass(i: int, next: Callable) -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Pasa el móvil a", 26, MUTED)
 	_lbl(_pname(i), 44, GOLD)
@@ -244,7 +257,7 @@ func _pass(i: int, next: Callable) -> void:
 # ---------- menú, reglas y configuración ----------
 
 func show_menu() -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(DARK)
 	_lbl(Txt.TITLE, 42, GOLD)
 	_lbl("Juego de deducción política para 5 a 10 jugadores. Se juega pasando el móvil.", 18, CREAM)
@@ -254,26 +267,50 @@ func show_menu() -> void:
 	_btn("Reglas", show_rules)
 
 
-func show_rules() -> void:
+func show_rules(page: int = 0) -> void:
 	_clear()
-	_lbl("Cómo se juega", 34, GOLD)
-	_lbl("Paso a paso, con ejemplos.", 18, MUTED)
-	for s in Txt.RULE_SECTIONS:
-		_begin_panel(Color(s["color"]))
-		_lbl(s["title"], 24, GOLD)
-		for line in s["lines"]:
-			_lbl("• " + line, 18)
+	var secs: Array = Txt.RULE_SECTIONS
+	rules_page = clampi(page, 0, secs.size() - 1)
+	var sec: Dictionary = secs[rules_page]
+	_begin_panel(Color(sec["color"]))
+	_lbl("Reglas %d de %d" % [rules_page + 1, secs.size()], 16, CREAM)
+	_lbl(sec["title"], 28, GOLD)
+	for line in sec["lines"]:
+		_lbl("• " + line, 19)
+	_end_panel()
+	if sec.has("example"):
+		_begin_panel(Color("#1e3a2b"))
+		_lbl("Ejemplo", 16, GOLD)
+		_lbl(sec["example"], 18, CREAM)
 		_end_panel()
-		if s.has("example"):
-			_begin_panel(Color("#1e3a2b"))
-			_lbl("Ejemplo", 16, GOLD)
-			_lbl(s["example"], 17, CREAM)
-			_end_panel()
-	_btn("Volver", show_menu, GREY)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	cur.add_child(row)
+	_nav_btn(row, "<", show_rules.bind(rules_page - 1), rules_page > 0)
+	_nav_btn(row, "Volver", show_menu, true)
+	_nav_btn(row, ">", show_rules.bind(rules_page + 1), rules_page < secs.size() - 1)
+
+
+func _nav_btn(row: HBoxContainer, text: String, cb: Callable, enabled: bool) -> void:
+	var b := Button.new()
+	b.text = text
+	b.disabled = not enabled
+	b.custom_minimum_size = Vector2(0, 84)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_font_size_override("font_size", 34 if text.length() == 1 else 24)
+	b.add_theme_color_override("font_color", CREAM)
+	b.add_theme_color_override("font_disabled_color", MUTED)
+	b.add_theme_stylebox_override("normal", _sb(Color("#2f6f8f")))
+	b.add_theme_stylebox_override("hover", _sb(Color("#3a82a6")))
+	b.add_theme_stylebox_override("pressed", _sb(Color("#245a72")))
+	b.add_theme_stylebox_override("disabled", _sb(Color("#4a4a4a")))
+	b.pressed.connect(Sfx.play.bind("tap"))
+	b.pressed.connect(cb)
+	row.add_child(b)
 
 
 func show_setup() -> void:
-	_clear()
+	_clear(true)
 	_lbl("Nueva partida", 34, GOLD)
 	var spin := SpinBox.new()
 	spin.min_value = 5
@@ -331,7 +368,7 @@ func _reveal_roles(i: int) -> void:
 
 
 func _show_role(i: int) -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tu sobre secreto", 26, GOLD)
 	_lbl("Tócalo para abrirlo. Toca la carta para verla y desliza hacia arriba para guardarla.", 17, MUTED)
@@ -370,7 +407,7 @@ func _reveal_team(k: int) -> void:
 
 
 func _show_team(i: int, k: int) -> void:
-	_clear()
+	_clear(true)
 	var role: String = game.players[i]["role"]
 	var n: int = game.players.size()
 	_begin_panel(DARK if role == "hitler" else RED)
@@ -754,7 +791,7 @@ func _count_true(arr: Array) -> int:
 
 
 func show_online_menu() -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Jugar online", 34, GOLD)
 	_lbl("Cada jugador usa su propio móvil. Una persona crea la sala y comparte el código con los demás.", 17, MUTED)
@@ -851,7 +888,7 @@ func _on_online_state(d: Dictionary) -> void:
 
 
 func _show_lobby(d: Dictionary) -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Sala %s" % d.get("code", ""), 36, GOLD)
 	_lbl("Comparte este código con tus amigos.", 17, MUTED)
@@ -870,7 +907,7 @@ func _show_lobby(d: Dictionary) -> void:
 
 func _show_online_role(d: Dictionary) -> void:
 	online_role_pending = true
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Tu sobre secreto", 26, GOLD)
 	_lbl("Tócalo para abrirlo. Toca la carta para verla y desliza hacia arriba para guardarla.", 17, MUTED)
@@ -1086,3 +1123,31 @@ func _show_online_end(d: Dictionary) -> void:
 		_lbl("%s: %s" % [_oname(names, i), Txt.ROLE_NAME[r]], 20)
 		_end_panel()
 	_btn("Menú principal", show_menu, GREY)
+
+
+# ---------- sonido y encaje en pantalla ----------
+
+func _toggle_sound() -> void:
+	Sfx.muted = not Sfx.muted
+	_update_sound_btn()
+	if not Sfx.muted:
+		Sfx.play("tap")
+
+
+func _update_sound_btn() -> void:
+	sound_btn.text = "Sonido: NO" if Sfx.muted else "Sonido: SÍ"
+
+
+## Sin scroll: si el contenido no cabe, se reduce para que quepa entero en la pantalla.
+func _process(_delta: float) -> void:
+	var vp := get_viewport_rect().size
+	var need := box.get_combined_minimum_size()
+	if need.y <= 0.0:
+		return
+	var s := minf(1.0, (vp.y - 90.0) / need.y)
+	box.scale = Vector2(s, s)
+	box.size = Vector2((vp.x - 40.0) / s, need.y)
+	var y := 70.0
+	if center_screen:
+		y = maxf(70.0, (vp.y - need.y * s) * 0.5)
+	box.position = Vector2(20.0, y)

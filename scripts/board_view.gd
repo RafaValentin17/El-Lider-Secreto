@@ -2,11 +2,11 @@ class_name BoardView
 extends Control
 ## Tablero fascista o liberal dibujado con formas. Se usa en la pantalla de juego.
 
-const FAS_BG := Color("#4a1414")
-const FAS_SLOT := Color("#6e1f1f")
+const FAS_BG := Color("#7a3b1e")
+const FAS_SLOT := Color("#4b2010")
 const FAS_ACC := Color("#f2c14e")
-const LIB_BG := Color("#10304f")
-const LIB_SLOT := Color("#1d4f7a")
+const LIB_BG := Color("#2f5d6e")
+const LIB_SLOT := Color("#1d3d4a")
 const LIB_ACC := Color("#9fd8ff")
 const CREAM := Color("#f5f0e1")
 

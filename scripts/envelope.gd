@@ -20,14 +20,14 @@ class Front extends Control:
 		var w := size.x
 		var h := size.y
 		draw_colored_polygon(PackedVector2Array([
-			Vector2(0, h), Vector2(0, h * 0.5), Vector2(w * 0.5, h * 0.78), Vector2(w, h * 0.5), Vector2(w, h)]), Color("#e0c98a"))
+			Vector2(0, h), Vector2(0, h * 0.5), Vector2(w * 0.5, h * 0.78), Vector2(w, h * 0.5), Vector2(w, h)]), Color("#b98a4e"))
 		draw_circle(Vector2(w * 0.5, h * 0.7), 16.0, Color("#a3262b"))
 		draw_string(ThemeDB.fallback_font, Vector2(w * 0.5 - 50, h - 12), "SECRETO", HORIZONTAL_ALIGNMENT_CENTER, 100, 12, Color("#5a3e12"))
 
 
 class Flap extends Control:
 	func _draw() -> void:
-		draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(size.x, 0), Vector2(size.x * 0.5, size.y)]), Color("#d4b76a"))
+		draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(size.x, 0), Vector2(size.x * 0.5, size.y)]), Color("#d6a86a"))
 
 
 func _init() -> void:
@@ -60,8 +60,8 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#f3e6c4"))
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#b08d3c"), false, 3.0)
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#c9a46a"))
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#2b1d0e"), false, 4.0)
 
 
 ## Con el sobre cerrado, un toque o un arrastre hacia arriba en la tapa lo abre.

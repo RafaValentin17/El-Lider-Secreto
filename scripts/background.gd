@@ -19,8 +19,8 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	var top := Color("#0b1020")
-	var bot := Color("#2a1030")
+	var top := Color("#3a2a1a")
+	var bot := Color("#6b4a2b")
 	var steps := 40
 	for i in steps:
 		var a := float(i) / float(steps)

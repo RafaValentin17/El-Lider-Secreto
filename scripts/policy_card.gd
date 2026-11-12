@@ -6,6 +6,7 @@ const BLUE := Color("#1f5f9e")
 const RED := Color("#a3262b")
 const DARK := Color("#3b0d0d")
 const CREAM := Color("#f5f0e1")
+const INK := Color("#2b1d0e")
 const GOLD := Color("#c9a227")
 
 var mode := "policy"       # policy | role | label
@@ -114,6 +115,7 @@ func _draw_policy(r: Rect2) -> void:
 	var is_lib := kind == "L"
 	var base: Color = BLUE if is_lib else RED
 	draw_rect(r, base)
+	draw_rect(r, INK, false, 4.0)
 	draw_rect(r.grow(-5.0), CREAM)
 	draw_rect(Rect2(Vector2(5, 5), Vector2(size.x - 10, 28)), base)
 	draw_string(font, Vector2(8, 25), "LIBERAL" if is_lib else "FASCISTA", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, CREAM)
@@ -134,6 +136,7 @@ func _draw_role(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
 	var col: Color = BLUE if role == "liberal" else (RED if role == "fascist" else DARK)
 	draw_rect(r, col)
+	draw_rect(r, INK, false, 4.0)
 	draw_rect(r.grow(-6.0), CREAM)
 	draw_rect(Rect2(Vector2(6, 6), Vector2(size.x - 12, 40)), col)
 	draw_string(font, Vector2(6, 34), "Tu rol secreto", HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 16, CREAM)
@@ -156,6 +159,7 @@ func _draw_role(r: Rect2) -> void:
 func _draw_label(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
 	draw_rect(r, label_col)
+	draw_rect(r, INK, false, 4.0)
 	draw_rect(r.grow(-6.0), label_col.darkened(0.25), false, 3.0)
 	draw_string(font, Vector2(8, size.y * 0.52), label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 30, CREAM)
 	draw_string(font, Vector2(8, size.y - 16), "▲ desliza", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 14, CREAM)
