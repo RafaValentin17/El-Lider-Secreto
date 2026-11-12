@@ -427,7 +427,7 @@ func _names_with(role: String, exclude: int) -> String:
 func _reveal_team(k: int) -> void:
 	var team := _team_members()
 	if k >= team.size():
-		show_board()
+		_show_draw_president()
 		return
 	var i: int = team[k]
 	_pass(i, func(): _show_team(i, k))
@@ -1178,3 +1178,46 @@ func _process(_delta: float) -> void:
 	if center_screen:
 		y = maxf(70.0, (vp.y - need.y * s) * 0.5)
 	box.position = Vector2(20.0, y)
+
+
+# ---------- primer Juez Presidente (botón) ----------
+
+func _show_draw_president() -> void:
+	_clear(true)
+	_begin_panel(NAVY)
+	_lbl("La partida está lista", 28, GOLD)
+	_lbl("Pulsa el botón para elegir al primer Juez Presidente.", 19, CREAM)
+	_end_panel()
+	var name_lbl := _lbl("?", 40, GOLD)
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_btn("Elegir Juez Presidente", _spin_president.bind(name_lbl), GREEN)
+
+
+## Pasa por los nombres y se detiene en uno al azar; luego el botón pasa a "Continuar".
+func _spin_president(lbl: Label) -> void:
+	var btn := _find_button_in_cur()
+	if btn != null:
+		btn.disabled = true
+	var n := game.players.size()
+	var final_idx := randi() % n
+	for k in 18:
+		lbl.text = String(game.players[k % n]["name"])
+		Sfx.play("draw")
+		await get_tree().create_timer(0.06 + float(k) * 0.02).timeout
+	lbl.text = String(game.players[final_idx]["name"])
+	Sfx.play("enact")
+	game.president = final_idx
+	game.last_event = "Nueva partida. El primer Juez Presidente es %s." % lbl.text
+	if btn != null:
+		btn.text = "Continuar"
+		btn.disabled = false
+		for c in btn.pressed.get_connections():
+			btn.pressed.disconnect(c["callable"])
+		btn.pressed.connect(show_board)
+
+
+func _find_button_in_cur() -> Button:
+	for c in cur.get_children():
+		if c is Button:
+			return c
+	return null
