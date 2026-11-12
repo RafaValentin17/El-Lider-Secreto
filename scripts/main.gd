@@ -587,7 +587,7 @@ func _vote_step(k: int) -> void:
 
 
 func _show_vote_card(i: int, k: int) -> void:
-	_clear()
+	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Voto secreto", 26, MUTED)
 	_lbl("%s: %s" % [Txt.PRES, _pname(game.president)], 20)
