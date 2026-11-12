@@ -196,27 +196,35 @@ func _draw_label(r: Rect2) -> void:
 	draw_string(font, Vector2(8, size.y - 16), "▲ desliza", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 14, CREAM)
 
 
-## Puño con el pulgar hacia arriba (¡Ja!) o hacia abajo (¡Nein!).
+## Puño con el pulgar hacia arriba (sí, verde) o hacia abajo (no, rojo). Sin texto.
 func _draw_thumb(r: Rect2) -> void:
-	var font := ThemeDB.fallback_font
-	var acc := ACC_HIT
+	var acc: Color = Color("#3fbf6a") if thumb_up else Color("#e0463c")
 	draw_rect(r, BLACK)
 	draw_rect(r, acc, false, 3.0)
 	draw_rect(r.grow(-6.0), acc, false, 1.5)
-	var c := Vector2(size.x * 0.5, size.y * 0.46)
-	# Pulgar.
-	var th := Rect2(c.x - 34.0, c.y - 10.0 + (-50.0 if thumb_up else 6.0), 26.0, 50.0)
-	draw_rect(th, FIST)
-	draw_rect(th, INK, false, 2.0)
-	# Palma con los dedos.
-	var palm := Rect2(c.x - 34.0, c.y - 10.0, 68.0, 56.0)
+	var c := Vector2(size.x * 0.5, size.y * 0.5)
+	var outline := Color("#1a1208")
+	# Puño: cuatro dedos apilados sobre la palma.
+	var palm := Rect2(c.x - 40.0, c.y - 30.0, 80.0, 66.0)
 	draw_rect(palm, FIST)
-	draw_rect(palm, INK, false, 2.5)
+	draw_rect(palm, outline, false, 3.0)
 	for k in range(1, 4):
-		var yy := palm.position.y + k * 14.0
-		draw_line(Vector2(palm.position.x + 4.0, yy), Vector2(palm.end.x - 4.0, yy), INK, 2.0)
-	# Muñeca en granate.
-	var wrist := Rect2(c.x - 40.0, c.y + (46.0 if thumb_up else -62.0), 80.0, 16.0)
-	draw_rect(wrist, Color("#6b1020"))
-	draw_rect(wrist, acc, false, 2.0)
-	draw_string(font, Vector2(8, size.y - 16), label_text, HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 24, acc)
+		var yy := palm.position.y + k * 16.5
+		draw_line(Vector2(palm.position.x + 6.0, yy), Vector2(palm.end.x - 6.0, yy), outline, 2.5)
+	for k in range(4):
+		var yy2 := palm.position.y + 4.0 + k * 16.5
+		draw_line(Vector2(palm.end.x - 2.0, yy2), Vector2(palm.end.x - 2.0, yy2 + 12.0), outline, 1.5)
+	# Pulgar, sacado hacia arriba o hacia abajo, con uña.
+	var tcx := c.x - 26.0
+	var ty := c.y - 30.0 if thumb_up else c.y + 36.0
+	var tip_y := c.y - 66.0 if thumb_up else c.y + 66.0
+	draw_rect(Rect2(tcx - 14.0, minf(ty, tip_y + 14.0), 28.0, absf(ty - tip_y) - 14.0 + 2.0), FIST)
+	draw_circle(Vector2(tcx, tip_y + (14.0 if thumb_up else -14.0)), 14.0, FIST)
+	draw_arc(Vector2(tcx, tip_y + (14.0 if thumb_up else -14.0)), 14.0, 0.0, TAU, 24, outline, 3.0)
+	draw_line(Vector2(tcx - 14.0, ty), Vector2(tcx - 14.0, tip_y + (14.0 if thumb_up else -14.0)), outline, 2.5)
+	draw_line(Vector2(tcx + 14.0, ty), Vector2(tcx + 14.0, tip_y + (14.0 if thumb_up else -14.0)), outline, 2.5)
+	draw_line(Vector2(tcx - 7.0, tip_y + (4.0 if thumb_up else -4.0)), Vector2(tcx + 7.0, tip_y + (4.0 if thumb_up else -4.0)), outline, 2.0)
+	# Muñeca con puño de encaje en el color de la carta.
+	var cuff_y := c.y + 40.0 if thumb_up else c.y - 58.0
+	draw_rect(Rect2(c.x - 50.0, cuff_y, 100.0, 18.0), acc)
+	draw_rect(Rect2(c.x - 50.0, cuff_y, 100.0, 18.0), outline, false, 2.0)
