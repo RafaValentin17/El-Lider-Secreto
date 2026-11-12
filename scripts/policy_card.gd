@@ -8,6 +8,7 @@ const DARK := Color("#3b0d0d")
 const CREAM := Color("#f5f0e1")
 const INK := Color("#2b1d0e")
 const GOLD := Color("#c9a227")
+const GOLD_BACK := Color("#d4af37")
 
 var mode := "policy"       # policy | role | label
 var kind := "L"
@@ -81,19 +82,27 @@ func _set_role(r: String) -> void:
 
 ## Reverso de carta con patrón dorado. Lo usan las cartas y las pilas.
 static func draw_back(ci: CanvasItem, r: Rect2) -> void:
-	ci.draw_rect(r, Color("#1b2a4a"))
-	ci.draw_rect(r.grow(-5.0), Color(0.79, 0.64, 0.15, 0.9), false, 2.0)
-	var x := 12.0
-	while x < r.size.x - 8.0:
-		var y := 12.0
-		while y < r.size.y - 8.0:
-			ci.draw_circle(r.position + Vector2(x, y), 1.8, Color(0.79, 0.64, 0.15, 0.35))
-			y += 14.0
-		x += 14.0
+	# Negro victoriano con relieve: bisel claro arriba-izquierda y sombra abajo-derecha.
+	ci.draw_rect(r, Color("#0b0b0b"))
+	ci.draw_rect(Rect2(r.position + Vector2(6, 6), r.size - Vector2(12, 12)), Color("#1c1c1c"))
+	ci.draw_line(r.position + Vector2(6, r.size.y - 6), r.position + Vector2(6, 6), Color("#2e2e2e"), 3.0)
+	ci.draw_line(r.position + Vector2(6, 6), r.position + Vector2(r.size.x - 6, 6), Color("#2e2e2e"), 3.0)
+	ci.draw_line(r.position + Vector2(r.size.x - 6, 6), r.position + Vector2(r.size.x - 6, r.size.y - 6), Color("#050505"), 3.0)
+	ci.draw_line(r.position + Vector2(r.size.x - 6, r.size.y - 6), r.position + Vector2(6, r.size.y - 6), Color("#050505"), 3.0)
+	# Borde dorado.
+	ci.draw_rect(r.grow(-2.0), GOLD_BACK, false, 3.0)
+	ci.draw_rect(r.grow(-10.0), Color(0.79, 0.64, 0.15, 0.5), false, 1.0)
+	# Motivo central: rombo con volutas doradas y un medallón.
 	var c := r.get_center()
-	ci.draw_circle(c, r.size.x * 0.24, Color(0.79, 0.64, 0.15, 0.9))
-	ci.draw_circle(c, r.size.x * 0.17, Color("#1b2a4a"))
-	ci.draw_circle(c, r.size.x * 0.1, Color(0.79, 0.64, 0.15, 0.9))
+	var k := minf(r.size.x, r.size.y) * 0.3
+	ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -k), c + Vector2(k * 0.6, 0), c + Vector2(0, k), c + Vector2(-k * 0.6, 0)]), Color(0.79, 0.64, 0.15, 0.25))
+	ci.draw_polyline(PackedVector2Array([c + Vector2(0, -k), c + Vector2(k * 0.6, 0), c + Vector2(0, k), c + Vector2(-k * 0.6, 0), c + Vector2(0, -k)]), GOLD_BACK, 2.0)
+	ci.draw_arc(c, k * 0.42, 0.0, TAU, 28, GOLD_BACK, 2.0)
+	ci.draw_circle(c, 4.0, GOLD_BACK)
+	# Franja de arabescos en las esquinas.
+	for corner in [Vector2(20, 20), Vector2(r.size.x - 20, 20), Vector2(20, r.size.y - 20), Vector2(r.size.x - 20, r.size.y - 20)]:
+		ci.draw_arc(r.position + corner, 9.0, 0.0, TAU, 16, Color(0.79, 0.64, 0.15, 0.6), 1.5)
+		ci.draw_circle(r.position + corner, 2.5, GOLD_BACK)
 
 
 func _draw() -> void:
@@ -118,7 +127,7 @@ func _draw_policy(r: Rect2) -> void:
 	draw_rect(r, INK, false, 4.0)
 	draw_rect(r.grow(-5.0), CREAM)
 	draw_rect(Rect2(Vector2(5, 5), Vector2(size.x - 10, 28)), base)
-	draw_string(font, Vector2(8, 25), "LIBERAL" if is_lib else "FASCISTA", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, CREAM)
+	draw_string(font, Vector2(8, 25), "LIBERTADOR" if is_lib else "TIRANO", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, CREAM)
 	var c := Vector2(size.x * 0.5, size.y * 0.5 + 8.0)
 	var s := minf(size.x, size.y) / 96.0
 	if is_lib:

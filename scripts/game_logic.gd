@@ -1,17 +1,17 @@
 class_name GameLogic
 extends RefCounted
 ## Reglas puras de El Líder Secreto (sin interfaz).
-## Equivalencias: LIBERAL = Juez, FASCIST = Cartel, HITLER = Fiscal Corrupto.
+## Equivalencias: LIBERTADOR = Juez, FASCIST = Cartel, HITLER = Consejero Corrupto.
 ## Cartas: "L" = Ley Justa, "F" = Ley Corrupta. La carta de arriba del mazo es la ultima del array.
 
-const LIBERAL := "liberal"
+const LIBERTADOR := "liberal"
 const FASCIST := "fascist"
 const HITLER := "hitler"
 
 var players: Array = []        # [{name, role, alive}]
 var draw_pile: Array = []
 var discard_pile: Array = []
-var hand: Array = []           # cartas en manos del Presidente o del Fiscal
+var hand: Array = []           # cartas en manos del Rey o del Consejero
 var enacted_l := 0
 var enacted_f := 0
 var tracker := 0               # gobiernos fallidos seguidos (0..3)
@@ -23,7 +23,7 @@ var prev_chancellor := -1
 var special_return := -1       # presidente que convoco la designacion extraordinaria
 var phase := "nominate"        # nominate, vote, discard_pres, discard_chan, veto_wait, exec, over
 var pending_power := ""        # peek, investigate, special, execute
-var winner := ""               # LIBERAL o FASCIST
+var winner := ""               # LIBERTADOR o FASCIST
 var win_reason := ""
 var last_event := ""
 var last_votes: Dictionary = {}
@@ -31,7 +31,7 @@ var investigated: Array = []   # jugadores ya auditados (solo se audita una vez)
 
 
 static func composition(n: int) -> Dictionary:
-	# Liberales y Cartel (sin contar al Fiscal Corrupto, que siempre existe)
+	# Libertadores y Cartel (sin contar al Consejero Corrupto, que siempre existe)
 	match n:
 		5: return {"liberal": 3, "fascist": 1}
 		6: return {"liberal": 4, "fascist": 1}
@@ -47,7 +47,7 @@ func setup(names: Array) -> void:
 	var comp := composition(n)
 	var roles: Array = []
 	for _i in comp["liberal"]:
-		roles.append(LIBERAL)
+		roles.append(LIBERTADOR)
 	for _i in comp["fascist"]:
 		roles.append(FASCIST)
 	roles.append(HITLER)
@@ -77,7 +77,7 @@ func setup(names: Array) -> void:
 	chancellor = -1
 	nominee = -1
 	phase = "nominate"
-	last_event = "Nueva partida. El primer Juez Presidente es %s." % players[president]["name"]
+	last_event = "Nueva partida. El primer Rey es %s." % players[president]["name"]
 
 
 # ---------- consultas ----------
@@ -106,7 +106,7 @@ func eligible_chancellors() -> Array:
 			continue
 		if i == prev_chancellor:
 			continue
-		if alive_indices().size() >= 6 and i == prev_president:
+		if alive_indices().size() >= 7 and i == prev_president:
 			continue
 		res.append(i)
 	return res
@@ -135,7 +135,7 @@ func can_request_veto() -> bool:
 func nominate(i: int) -> void:
 	nominee = i
 	phase = "vote"
-	last_event = "%s propone a %s como Fiscal." % [players[president]["name"], players[i]["name"]]
+	last_event = "%s propone a %s como Consejero." % [players[president]["name"], players[i]["name"]]
 
 
 ## vote_map: {indice_jugador: true (Si) / false (No)} de los jugadores vivos.
@@ -153,12 +153,12 @@ func resolve_vote(vote_map: Dictionary) -> bool:
 		prev_president = president
 		prev_chancellor = chancellor
 		if players[chancellor]["role"] == HITLER and enacted_f >= 3:
-			_win(FASCIST, "El Fiscal Corrupto llego a Fiscal tras 3 leyes corruptas.")
+			_win(FASCIST, "El Consejero Corrupto llego a Consejero tras 3 leyes corruptas.")
 			return true
-		last_event = "Gobierno aprobado (%d a %d): %s es Juez Presidente y %s es Fiscal." % [
+		last_event = "Gobierno aprobado (%d a %d): %s es Rey y %s es Consejero." % [
 			yes, no, players[president]["name"], players[chancellor]["name"]]
 		if enacted_f >= 3:
-			last_event += " Se confirma que el Fiscal no es Hitler."
+			last_event += " Se confirma que el Consejero no es El Esclavista."
 		hand = _draw_n(3)
 		phase = "discard_pres"
 		return true
@@ -174,7 +174,7 @@ func president_discard(idx: int) -> void:
 	discard_pile.append(hand[idx])
 	hand.remove_at(idx)
 	phase = "discard_chan"
-	last_event = "El Juez Presidente ha descartado una ley en secreto y pasa dos al Fiscal."
+	last_event = "El Rey ha descartado una ley en secreto y pasa dos al Consejero."
 
 
 func chancellor_enact(idx: int) -> void:
@@ -187,7 +187,7 @@ func chancellor_enact(idx: int) -> void:
 
 func request_veto() -> void:
 	phase = "veto_wait"
-	last_event = "El Fiscal propone un recurso de apelacion (veto)."
+	last_event = "El Consejero propone un recurso de apelacion (veto)."
 
 
 func veto_answer(accept: bool) -> void:
@@ -195,11 +195,11 @@ func veto_answer(accept: bool) -> void:
 		discard_pile.append_array(hand)
 		hand = []
 		tracker += 1
-		last_event = "El Juez Presidente acepta el veto: ambas leyes se descartan. Fallos seguidos: %d/3." % tracker
+		last_event = "El Rey acepta el veto: ambas leyes se descartan. Fallos seguidos: %d/3." % tracker
 		_fail_government()
 	else:
 		phase = "discard_chan"
-		last_event = "El Juez Presidente rechaza el veto. El Fiscal debe promulgar una ley."
+		last_event = "El Rey rechaza el veto. El Consejero debe promulgar una ley."
 
 
 # ---------- poderes ejecutivos ----------
@@ -226,7 +226,7 @@ func investigable_indices() -> Array:
 
 func investigate(i: int) -> String:
 	investigated.append(i)
-	return "liberal" if players[i]["role"] == LIBERAL else "fascist"
+	return "liberal" if players[i]["role"] == LIBERTADOR else "fascist"
 
 
 func exec_special(i: int) -> void:
@@ -236,14 +236,14 @@ func exec_special(i: int) -> void:
 	nominee = -1
 	pending_power = ""
 	phase = "nominate"
-	last_event = "%s es designado Juez Presidente de forma extraordinaria." % players[i]["name"]
+	last_event = "%s es designado Rey de forma extraordinaria." % players[i]["name"]
 
 
 func exec_kill(i: int) -> void:
 	players[i]["alive"] = false
 	last_event = "%s ha sido inhabilitado del tribunal." % players[i]["name"]
 	if players[i]["role"] == HITLER:
-		_win(LIBERAL, "Se inhabilito al Fiscal Corrupto.")
+		_win(LIBERTADOR, "Se inhabilito al Consejero Corrupto.")
 		return
 	_next_round()
 
@@ -270,7 +270,7 @@ func _enact(card: String, allow_power: bool, prefix: String) -> void:
 	var txt := "Se promulga una Ley Justa." if card == "L" else "Se promulga una Ley Corrupta."
 	last_event = (prefix + " " + txt).strip_edges()
 	if enacted_l >= 5:
-		_win(LIBERAL, "Se han promulgado 5 Leyes Justas.")
+		_win(LIBERTADOR, "Se han promulgado 5 Leyes Justas.")
 		return
 	if enacted_f >= 6:
 		_win(FASCIST, "Se han promulgado 6 Leyes Corruptas.")

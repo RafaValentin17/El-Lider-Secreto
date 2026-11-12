@@ -2,12 +2,12 @@ class_name BoardView
 extends Control
 ## Tablero fascista o liberal dibujado con formas. Se usa en la pantalla de juego.
 
-const FAS_BG := Color("#7a3b1e")
-const FAS_SLOT := Color("#4b2010")
-const FAS_ACC := Color("#f2c14e")
-const LIB_BG := Color("#2f5d6e")
-const LIB_SLOT := Color("#1d3d4a")
-const LIB_ACC := Color("#9fd8ff")
+const FAS_BG := Color("#121212")
+const FAS_SLOT := Color("#2e2e2e")
+const FAS_ACC := Color("#c9a227")
+const LIB_BG := Color("#f4f1ea")
+const LIB_SLOT := Color("#ddd6c4")
+const LIB_ACC := Color("#3b2a1a")
 const CREAM := Color("#f5f0e1")
 
 var kind := "fascist"
@@ -23,7 +23,7 @@ func set_board(k: String, n: int, p: Array, t: int) -> void:
 	enacted = n
 	powers = p
 	tracker = t
-	custom_minimum_size = Vector2(0, 230.0 if kind == "fascist" else 210.0)
+	custom_minimum_size = Vector2(0, 230.0 if kind == "fascist" else 150.0)
 	queue_redraw()
 
 
@@ -54,7 +54,8 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	draw_rect(Rect2(Vector2.ZERO, size), bgc)
 	draw_rect(Rect2(Vector2(4, 4), size - Vector2(8, 8)), acc, false, 3.0)
-	draw_string(font, Vector2(16, 34), "TABLERO FASCISTA" if fas else "TABLERO LIBERAL", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, acc)
+	draw_rect(Rect2(Vector2(10, 10), size - Vector2(20, 20)), acc, false, 1.0)
+	draw_string(font, Vector2(16, 34), "TABLERO TIRANO" if fas else "TABLERO LIBERTADOR", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, acc)
 
 	var n := 6 if fas else 5
 	var pad := 14.0
@@ -68,7 +69,7 @@ func _draw() -> void:
 		draw_rect(r, acc, false, 2.0)
 		if fas and i == 5:
 			_skull(c + Vector2(0, -8), minf(cw, ch) * 0.3, slot_c, acc)
-			draw_string(font, Vector2(r.position.x, r.end.y + 16), "Canciller Hitler", HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, acc)
+			draw_string(font, Vector2(r.position.x, r.end.y + 16), "Consejero El Esclavista", HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, acc)
 			continue
 		if i < enacted:
 			var fillc := Color("#c0392b") if fas else Color("#2e86c1")
@@ -86,16 +87,8 @@ func _draw() -> void:
 			draw_rect(r.grow(5.0), Color(acc.r, acc.g, acc.b, pulse), false, 4.0)
 
 	if fas:
-		draw_string(font, Vector2(pad, size.y - 12.0), "Hitler canciller tras la 3.ª fascista = victoria fascista", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, acc)
-	else:
-		draw_string(font, Vector2(pad, size.y - 58.0), Txt.TRACK, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, acc)
-		for k in 3:
-			var cc := Vector2(pad + 30.0 + k * 90.0, size.y - 24.0)
-			draw_circle(cc, 13.0, slot_c)
-			if k < tracker:
-				draw_circle(cc, 9.0, acc)
-			draw_arc(cc, 13.0, 0.0, TAU, 24, acc, 2.0)
-		draw_string(font, Vector2(pad + 300.0, size.y - 18.0), "3 fracasos: se promulga la cima", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, acc)
+		draw_string(font, Vector2(pad, size.y - 12.0), "El Esclavista canciller tras la 3.ª fascista = victoria fascista", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, acc)
+
 
 
 func _skull(c: Vector2, s: float, bg: Color, acc: Color) -> void:

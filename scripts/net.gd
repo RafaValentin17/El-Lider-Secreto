@@ -212,7 +212,7 @@ func _apply(r: Dictionary, g: GameLogic, seat: int, action: String, arg: int) ->
 	return true
 
 
-## Lo que se muestra en pantalla tras cada acción: el peek y la auditoría son privados del Presidente.
+## Lo que se muestra en pantalla tras cada acción: el peek y la auditoría son privados del Rey.
 func _after(r: Dictionary, g: GameLogic) -> void:
 	if g.phase != "exec":
 		r["private"] = {}
@@ -242,7 +242,7 @@ func _team(g: GameLogic, seat: int) -> Array:
 		if i == seat:
 			continue
 		var other: String = g.players[i]["role"]
-		if me == GameLogic.FASCIST and other != GameLogic.LIBERAL:
+		if me == GameLogic.FASCIST and other != GameLogic.LIBERTADOR:
 			res.append(g.players[i]["name"])
 		elif me == GameLogic.HITLER and g.players.size() <= 6 and other == GameLogic.FASCIST:
 			res.append(g.players[i]["name"])

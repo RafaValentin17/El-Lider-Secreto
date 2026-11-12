@@ -1,5 +1,5 @@
 extends Control
-## Secret Hitler: sobres, cartas deslizables, tablero y pilas. Un móvil que pasa de mano entre jugadores.
+## Secret El Esclavista: sobres, cartas deslizables, tablero y pilas. Un móvil que pasa de mano entre jugadores.
 
 const CREAM := Color("#f5f0e1")
 const GOLD := Color("#f2c14e")
@@ -32,6 +32,7 @@ var last_discard := 0
 var pending_pulse: Array = []
 var setup_names: Array = []
 var sound_btn: Button
+var role_btn: Button
 var center_screen := false
 var rules_page := 0
 var net: Net
@@ -42,6 +43,7 @@ var online_create := true
 var online_last: Dictionary = {}
 var online_role_seen := false
 var online_role_pending := false
+var online_spun := false
 var online_url_edit: LineEdit
 var online_name_edit: LineEdit
 var online_code_edit: LineEdit
@@ -73,6 +75,22 @@ func _ready() -> void:
 	sound_btn.pressed.connect(_toggle_sound)
 	add_child(sound_btn)
 	_update_sound_btn()
+	role_btn = Button.new()
+	role_btn.text = "Mi rol"
+	role_btn.visible = false
+	role_btn.add_theme_font_size_override("font_size", 18)
+	role_btn.add_theme_color_override("font_color", CREAM)
+	role_btn.add_theme_stylebox_override("normal", _sb(Color("#3b2a1a")))
+	role_btn.add_theme_stylebox_override("hover", _sb(Color("#4d3822")))
+	role_btn.add_theme_stylebox_override("pressed", _sb(Color("#2a1d10")))
+	role_btn.anchor_left = 0.0
+	role_btn.anchor_right = 0.0
+	role_btn.offset_left = 10
+	role_btn.offset_right = 160
+	role_btn.offset_top = 10
+	role_btn.offset_bottom = 56
+	role_btn.pressed.connect(_open_role)
+	add_child(role_btn)
 	net = Net.new()
 	net.name = "Net"
 	add_child(net)
@@ -90,6 +108,8 @@ func _ready() -> void:
 
 func _clear(center: bool = false) -> void:
 	center_screen = center
+	if role_btn != null:
+		role_btn.visible = false
 	for c in box.get_children():
 		box.remove_child(c)
 		c.queue_free()
@@ -236,6 +256,12 @@ func _pname(i: int) -> String:
 
 func _pname_or(i: int) -> String:
 	return _pname(i) if i >= 0 else "—"
+
+
+func _short(t: String, empty: String) -> String:
+	if t == "":
+		return "(" + empty + ")"
+	return t if t.length() <= 16 else t.substr(0, 15) + "…"
 
 
 func _join(arr: Array) -> String:
@@ -385,6 +411,43 @@ func _start_game() -> void:
 	_reveal_roles(0)
 
 
+# ---------- consulta de rol desde el tablero ----------
+
+func _open_role() -> void:
+	if not online_last.is_empty():
+		_show_online_role(online_last)
+		return
+	_show_role_pick()
+
+
+func _show_role_pick() -> void:
+	_clear(true)
+	_begin_panel(NAVY)
+	_lbl("¿Quién eres?", 26, GOLD)
+	_lbl("Elige tu nombre para abrir tu sobre.", 17, MUTED)
+	_end_panel()
+	for i in game.players.size():
+		_btn(_pname(i), func(): _show_role_again(i), DARK)
+	_btn("Volver al tablero", show_board, GREY)
+
+
+func _show_role_again(i: int) -> void:
+	_clear(true)
+	_begin_panel(NAVY)
+	_lbl("Tu sobre secreto", 26, GOLD)
+	_lbl("Solo tú puedes ver tu rol.", 17, MUTED)
+	_end_panel()
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 90)
+	cur.add_child(gap)
+	var center := CenterContainer.new()
+	cur.add_child(center)
+	var env := Envelope.new()
+	env.set_role(game.players[i]["role"])
+	center.add_child(env)
+	_btn("Volver al tablero", show_board, GREY)
+
+
 # ---------- sobres de rol ----------
 
 func _reveal_roles(i: int) -> void:
@@ -400,6 +463,9 @@ func _show_role(i: int) -> void:
 	_lbl("Tu sobre secreto", 26, GOLD)
 	_lbl("Solo tú puedes ver tu rol.", 17, MUTED)
 	_end_panel()
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 90)
+	cur.add_child(gap)
 	var center := CenterContainer.new()
 	cur.add_child(center)
 	var env := Envelope.new()
@@ -411,7 +477,7 @@ func _show_role(i: int) -> void:
 func _team_members() -> Array:
 	var res: Array = []
 	for i in game.players.size():
-		if game.players[i]["role"] != GameLogic.LIBERAL:
+		if game.players[i]["role"] != GameLogic.LIBERTADOR:
 			res.append(i)
 	return res
 
@@ -440,12 +506,12 @@ func _show_team(i: int, k: int) -> void:
 	_begin_panel(DARK if role == "hitler" else RED)
 	_lbl("Conoces a tu equipo", 24, GOLD)
 	if role == "fascist":
-		_lbl("Otros fascistas: %s." % _names_with(GameLogic.FASCIST, i), 20)
-		_lbl("Hitler: %s." % _names_with(GameLogic.HITLER, i), 20)
+		_lbl("Otros tiranos: %s." % _names_with(GameLogic.FASCIST, i), 20)
+		_lbl("El Esclavista: %s." % _names_with(GameLogic.HITLER, i), 20)
 	elif n <= 6:
-		_lbl("Eres Hitler. Fascistas: %s." % _names_with(GameLogic.FASCIST, i), 20)
+		_lbl("Eres El Esclavista. Tiranos: %s." % _names_with(GameLogic.FASCIST, i), 20)
 	else:
-		_lbl("Eres Hitler. No conoces a ningún fascista.", 20)
+		_lbl("Eres El Esclavista. No conoces a ningún fascista.", 20)
 	_end_panel()
 	_btn("Ocultar y seguir", func(): _reveal_team(k + 1), GREY)
 
@@ -458,6 +524,7 @@ func show_board() -> void:
 		show_end()
 		return
 
+	role_btn.visible = true
 	var fas_n: int = game.enacted_f
 	var lib_n: int = game.enacted_l
 	var fly: Array = pending_pulse
@@ -472,6 +539,9 @@ func show_board() -> void:
 	lib_view = BoardView.new()
 	lib_view.set_board("liberal", lib_n, [], game.tracker)
 	cur.add_child(lib_view)
+	var ft := FailTrack.new()
+	ft.set_tracker(game.tracker)
+	cur.add_child(ft)
 	pending_pulse = []
 	if fly.size() == 2:
 		_fly_enacted(fly[0], fly[1])
@@ -616,8 +686,12 @@ func _show_vote_result() -> void:
 	Sfx.play("vote" if passed else "fail")
 	_begin_panel(NAVY)
 	_lbl("Resultado de la votación", 28, GOLD)
+	var yes := 0
 	for i in vote_queue:
-		_lbl("%s: %s" % [_pname(i), Txt.JA if vote_map[i] else Txt.NEIN], 22, GREEN if vote_map[i] else RED)
+		if vote_map[i]:
+			yes += 1
+	_lbl("%s: %d    %s: %d" % [Txt.JA, yes, Txt.NEIN, vote_queue.size() - yes], 24, GOLD)
+	_lbl("El voto de cada jugador es secreto.", 16, MUTED)
 	_lbl(game.last_event, 18, MUTED)
 	_end_panel()
 	_btn("Continuar", show_board, GREY)
@@ -761,7 +835,7 @@ func show_end() -> void:
 	_clear()
 	var lib_win := game.winner == "liberal"
 	_begin_panel(BLUE if lib_win else RED)
-	_lbl("Ganan los Liberales" if lib_win else "Ganan los Fascistas", 36, GOLD)
+	_lbl("Ganan los Libertadores" if lib_win else "Ganan los Tiranos", 36, GOLD)
 	_lbl(game.win_reason, 18)
 	_end_panel()
 	_lbl("Roles de la partida", 22, GOLD)
@@ -824,9 +898,9 @@ func show_online_menu() -> void:
 	_lbl("Cada jugador usa su propio móvil. Una persona crea la sala y comparte el código con los demás.", 17, MUTED)
 	_end_panel()
 	if OS.has_feature("web"):
-		_btn("Servidor: " + online_url, _ask_value.bind("url"), Color("#33465f"))
-		_btn("Tu nombre: " + (online_name if online_name != "" else "(sin nombre)"), _ask_value.bind("name"), Color("#33465f"))
-		_btn("Código de sala: " + (online_code if online_code != "" else "(solo para unirte)"), _ask_value.bind("code"), Color("#33465f"))
+		_btn("Cambiar servidor", _ask_value.bind("url"), Color("#33465f"))
+		_btn("Tu nombre: " + _short(online_name, "sin nombre"), _ask_value.bind("name"), Color("#33465f"))
+		_btn("Código de sala: " + _short(online_code, "solo para unirte"), _ask_value.bind("code"), Color("#33465f"))
 	else:
 		online_url_edit = _field(online_url, "Servidor (ws://... o wss://...)")
 		online_url_edit.text_changed.connect(func(t: String): online_url = t)
@@ -915,6 +989,7 @@ func _on_online_state(d: Dictionary) -> void:
 
 
 func _show_lobby(d: Dictionary) -> void:
+	online_spun = false
 	_clear(true)
 	_begin_panel(NAVY)
 	_lbl("Sala %s" % d.get("code", ""), 36, GOLD)
@@ -939,6 +1014,9 @@ func _show_online_role(d: Dictionary) -> void:
 	_lbl("Tu sobre secreto", 26, GOLD)
 	_lbl("Solo tú puedes ver tu rol.", 17, MUTED)
 	_end_panel()
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 90)
+	cur.add_child(gap)
 	var center := CenterContainer.new()
 	cur.add_child(center)
 	var env := Envelope.new()
@@ -954,6 +1032,11 @@ func _show_online_role(d: Dictionary) -> void:
 		_lbl("No conoces a ningún fascista.", 20)
 		_end_panel()
 	_btn("Ocultar y empezar", _online_role_done, GREY)
+
+
+func _online_spun_done(_idx: int, _who: String) -> void:
+	online_spun = true
+	_render_online_board()
 
 
 func _online_role_done() -> void:
@@ -997,6 +1080,10 @@ func _render_online_board() -> void:
 	if phase == "over":
 		_show_online_end(d)
 		return
+	if not online_spun and phase == "nominate" and pub["enacted_f"] == 0 and pub["enacted_l"] == 0 and pub["tracker"] == 0:
+		_show_roulette(names, pres, "La partida está lista", "La ruleta elige al primer Rey.", _online_spun_done)
+		return
+	role_btn.visible = true
 
 	var fas := BoardView.new()
 	fas.set_board("fascist", pub["enacted_f"], d["powers"], 0)
@@ -1004,6 +1091,9 @@ func _render_online_board() -> void:
 	var lib := BoardView.new()
 	lib.set_board("liberal", pub["enacted_l"], [], pub["tracker"])
 	cur.add_child(lib)
+	var ft := FailTrack.new()
+	ft.set_tracker(pub["tracker"])
+	cur.add_child(ft)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 30)
@@ -1053,11 +1143,11 @@ func _render_online_board() -> void:
 	match phase:
 		"nominate":
 			if seat == pres:
-				_lbl("Propón un Canciller:", 22, GOLD)
+				_lbl("Propón un Consejero:", 22, GOLD)
 				for i in d["eligible"]:
 					_btn(String(names[i]), _online_act.bind("nominate", i), Color("#2c4f7c"))
 			else:
-				_lbl("Esperando a que %s proponga un Canciller..." % _oname(names, pres), 18, MUTED)
+				_lbl("Esperando a que %s proponga un Consejero..." % _oname(names, pres), 18, MUTED)
 		"vote":
 			_lbl("Votación para %s como %s" % [_oname(names, d["nominee"]), Txt.CHAN], 20, GOLD)
 			if not alive_seat:
@@ -1088,11 +1178,11 @@ func _render_online_board() -> void:
 				_lbl("%s está promulgando una política en secreto." % _oname(names, chan), 18, MUTED)
 		"veto_wait":
 			if seat == pres:
-				_lbl("El Canciller propone un veto. ¿Aceptas descartar ambas políticas?", 20)
+				_lbl("El Consejero propone un veto. ¿Aceptas descartar ambas políticas?", 20)
 				_btn("Aceptar veto", _online_act.bind("veto", 1), GREEN)
 				_btn("Rechazar veto", _online_act.bind("veto", 0), RED)
 			else:
-				_lbl("Esperando la respuesta del Juez Presidente al veto.", 18, MUTED)
+				_lbl("Esperando la respuesta del Rey al veto.", 18, MUTED)
 		"exec":
 			if seat == pres:
 				_online_power(d)
@@ -1125,7 +1215,7 @@ func _online_power(d: Dictionary) -> void:
 			_lbl("Elige a quién investigar (en secreto):", 20)
 		"special":
 			action = "special"
-			_lbl("Elige al siguiente Juez Presidente:", 20)
+			_lbl("Elige al siguiente Rey:", 20)
 		"execute":
 			action = "execute"
 			_lbl("Elige a quién eliminar (no se revela su rol):", 20)
@@ -1139,7 +1229,7 @@ func _show_online_end(d: Dictionary) -> void:
 	var names: Array = pub["names"]
 	var lib_win: bool = pub["winner"] == "liberal"
 	_begin_panel(BLUE if lib_win else RED)
-	_lbl("Ganan los Liberales" if lib_win else "Ganan los Fascistas", 36, GOLD)
+	_lbl("Ganan los Libertadores" if lib_win else "Ganan los Tiranos", 36, GOLD)
 	_lbl(String(d.get("win", "")), 18)
 	_end_panel()
 	_lbl("Roles de la partida", 22, GOLD)
@@ -1180,40 +1270,49 @@ func _process(_delta: float) -> void:
 	box.position = Vector2(20.0, y)
 
 
-# ---------- primer Juez Presidente (botón) ----------
+# ---------- primer Rey (ruleta victoriana) ----------
 
 func _show_draw_president() -> void:
+	var names: Array = []
+	for p in game.players:
+		names.append(String(p["name"]))
+	var final_idx := randi() % names.size()
+	_show_roulette(names, final_idx, "La partida está lista", "Gira la ruleta para elegir al primer Rey.", _start_first_round)
+
+
+## Pantalla con la ruleta. Al terminar de girar, el botón pasa a "Continuar" y llama a done.
+func _show_roulette(names: Array, final_idx: int, title: String, text: String, done: Callable) -> void:
 	_clear(true)
 	_begin_panel(NAVY)
-	_lbl("La partida está lista", 28, GOLD)
-	_lbl("Pulsa el botón para elegir al primer Juez Presidente.", 19, CREAM)
+	_lbl(title, 28, GOLD)
+	_lbl(text, 19, CREAM)
 	_end_panel()
-	var name_lbl := _lbl("?", 40, GOLD)
-	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_btn("Elegir Juez Presidente", _spin_president.bind(name_lbl), GREEN)
+	var wheel := Roulette.new()
+	wheel.set_players(names)
+	var center := CenterContainer.new()
+	cur.add_child(center)
+	center.add_child(wheel)
+	var result := _lbl("", 30, GOLD)
+	result.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var st := {"spun": false, "btn": null}
+	st["btn"] = _btn("Girar la ruleta", func():
+		if st["spun"]:
+			done.call(final_idx, names[final_idx])
+			return
+		st["spun"] = true
+		var b: Button = st["btn"]
+		b.disabled = true
+		wheel.spin(final_idx, func():
+			result.text = "El Rey es %s" % names[final_idx]
+			Sfx.play("enact")
+			b.text = "Continuar"
+			b.disabled = false), GREEN)
 
 
-## Pasa por los nombres y se detiene en uno al azar; luego el botón pasa a "Continuar".
-func _spin_president(lbl: Label) -> void:
-	var btn := _find_button_in_cur()
-	if btn != null:
-		btn.disabled = true
-	var n := game.players.size()
-	var final_idx := randi() % n
-	for k in 18:
-		lbl.text = String(game.players[k % n]["name"])
-		Sfx.play("draw")
-		await get_tree().create_timer(0.06 + float(k) * 0.02).timeout
-	lbl.text = String(game.players[final_idx]["name"])
-	Sfx.play("enact")
-	game.president = final_idx
-	game.last_event = "Nueva partida. El primer Juez Presidente es %s." % lbl.text
-	if btn != null:
-		btn.text = "Continuar"
-		btn.disabled = false
-		for c in btn.pressed.get_connections():
-			btn.pressed.disconnect(c["callable"])
-		btn.pressed.connect(show_board)
+func _start_first_round(idx: int, who: String) -> void:
+	game.president = idx
+	game.last_event = "Nueva partida. El primer Rey es %s." % who
+	show_board()
 
 
 func _find_button_in_cur() -> Button:
