@@ -452,7 +452,7 @@ func _show_role_again(i: int) -> void:
 
 func _reveal_roles(i: int) -> void:
 	if i >= game.players.size():
-		_reveal_team(0)
+		_show_draw_president()
 		return
 	_pass(i, func(): _show_role(i))
 
