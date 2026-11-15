@@ -56,9 +56,9 @@ func setup(names: Array) -> void:
 	for i in n:
 		players.append({"name": names[i], "role": roles[i], "alive": true})
 	draw_pile = []
-	for _i in 11:
-		draw_pile.append("L")
 	for _i in 6:
+		draw_pile.append("L")
+	for _i in 11:
 		draw_pile.append("F")
 	draw_pile.shuffle()
 	discard_pile = []
