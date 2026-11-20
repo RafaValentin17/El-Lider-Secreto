@@ -102,7 +102,7 @@ Ejemplo de empate: 6 jugadores, 3 [color=#3fbf6a]SÍ[/color] y 3 [color=#ff5c8a]
 		"title": "5. Sesión legislativa y ejecutiva",
 		"color": "#a35c1e",
 		"text": """El [color=#ff9f43]REY[/color] roba 3 [color=#e6e6e6]LEYES[/color] y las mira en secreto. Descarta una y pasa las otras dos al [color=#b388ff]CONSEJERO[/color].
-El [color=#b388ff]CONSEJERO[/color] elige una de esas dos [color=#e6e6e6]LEYES[/color] para promulgarla. Suma 1 punto al marcador de [color=#4aa3ff]LIBERTADORES[/color] si es azul, o al de [color=#e0463c]TIRANOS[/color] si es roja.
+El [color=#b388ff]CONSEJERO[/color] elige una de esas dos [color=#e6e6e6]LEYES[/color] para promulgarla. Suma 1 punto al marcador de [color=#4aa3ff]LIBERTADORES[/color] si es blanca, o al de [color=#e0463c]TIRANOS[/color] si es negra.
 Durante la sesión, el [color=#ff9f43]REY[/color] y el [color=#b388ff]CONSEJERO[/color] no pueden hablar ni hacer señas.
 
 Ejemplo: el [color=#ff9f43]REY[/color] roba [color=#9fd8ff]LIBERTADORA[/color], [color=#ff8a80]TIRÁNICA[/color] y [color=#ff8a80]TIRÁNICA[/color]. Descarta una [color=#ff8a80]TIRÁNICA[/color] y pasa la [color=#9fd8ff]LIBERTADORA[/color] y la otra [color=#ff8a80]TIRÁNICA[/color] al [color=#b388ff]CONSEJERO[/color]. Este elige la [color=#ff8a80]TIRÁNICA[/color] y se promulga: suma 1 punto a los [color=#e0463c]TIRANOS[/color].""",

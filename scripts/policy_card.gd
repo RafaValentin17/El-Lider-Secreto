@@ -134,6 +134,10 @@ func _draw() -> void:
 const BLACK := Color("#0d0d0d")
 const ACC_LIB := Color("#9fd8ff")
 const ACC_FAS := Color("#e0463c")
+const PAPER := Color("#f4f1ea")
+const PAPER_HEAD := Color("#e2dccb")
+const INK_LIB := Color("#1f4e8c")
+const GOLD_HIT := Color("#f2c14e")
 const ACC_HIT := Color("#f2c14e")
 const FIST := Color("#d9b26a")
 
@@ -141,28 +145,29 @@ const FIST := Color("#d9b26a")
 func _draw_policy(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
 	var is_lib := kind == "L"
-	var acc: Color = ACC_LIB if is_lib else ACC_FAS
-	draw_rect(r, BLACK)
+	var acc: Color = INK_LIB if is_lib else ACC_FAS
+	draw_rect(r, PAPER if is_lib else BLACK)
 	draw_rect(r, acc, false, 3.0)
 	draw_rect(r.grow(-6.0), acc, false, 1.5)
-	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 28)), Color("#1c1c1c"))
+	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 28)), PAPER_HEAD if is_lib else Color("#1c1c1c"))
 	draw_string(font, Vector2(8, 27), "LIBERTADOR" if is_lib else "TIRANO", HORIZONTAL_ALIGNMENT_CENTER, size.x - 16, 13, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.5 + 8.0)
 	var s := minf(size.x, size.y) / 96.0
-	draw_symbol(self, "cap" if is_lib else "crown", c, 1.0 * s, acc)
+	draw_symbol(self, "flag" if is_lib else "crown", c, 1.0 * s, acc)
 	draw_string(font, Vector2(6, size.y - 12), Txt.LIB_POL if is_lib else Txt.FAS_POL, HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 11, acc)
 
 
 func _draw_role(r: Rect2) -> void:
 	var font := ThemeDB.fallback_font
-	var acc: Color = ACC_LIB if role == "liberal" else (ACC_FAS if role == "fascist" else ACC_HIT)
-	draw_rect(r, BLACK)
+	var is_lib := role == "liberal"
+	var acc: Color = INK_LIB if is_lib else (ACC_FAS if role == "fascist" else GOLD_HIT)
+	draw_rect(r, PAPER if is_lib else BLACK)
 	draw_rect(r, acc, false, 3.0)
 	draw_rect(r.grow(-6.0), acc, false, 1.5)
-	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 36)), Color("#1c1c1c"))
+	draw_rect(Rect2(Vector2(8, 8), Vector2(size.x - 16, 36)), PAPER_HEAD if is_lib else Color("#1c1c1c"))
 	draw_string(font, Vector2(6, 33), "Tu rol secreto", HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 16, acc)
 	var c := Vector2(size.x * 0.5, size.y * 0.42)
-	var sym := "cap" if role == "liberal" else ("crown" if role == "fascist" else "chain")
+	var sym := "flag" if is_lib else ("crown" if role == "fascist" else "hammer")
 	draw_symbol(self, sym, c, 1.6, acc)
 	draw_string(font, Vector2(6, size.y * 0.72), Txt.ROLE_NAME[role], HORIZONTAL_ALIGNMENT_CENTER, size.x - 12, 22, acc)
 
@@ -213,15 +218,14 @@ func _draw_thumb(r: Rect2) -> void:
 	draw_rect(Rect2(c.x - 50.0, cuff_y, 100.0, 18.0), outline, false, 2.0)
 
 
-## Símbolos: gorro de la libertad (libertadores), corona (tiranos) y cadenas (El Esclavista).
+## Símbolos: bandera (libertadores), corona (tiranos) y martillo (El Esclavista).
 static func draw_symbol(ci: CanvasItem, kind: String, c: Vector2, sc: float, col: Color) -> void:
 	match kind:
-		"cap":
-			var pts := PackedVector2Array([
-				c + Vector2(-26, 20) * sc, c + Vector2(-24, -4) * sc, c + Vector2(-12, -16) * sc,
-				c + Vector2(4, -28) * sc, c + Vector2(20, -14) * sc, c + Vector2(26, 20) * sc])
-			ci.draw_colored_polygon(pts, col)
-			ci.draw_rect(Rect2(c + Vector2(-30, 16) * sc, Vector2(60, 9) * sc), col)
+		"flag":
+			ci.draw_rect(Rect2(c + Vector2(-26, -30) * sc, Vector2(5, 62) * sc), col)
+			ci.draw_colored_polygon(PackedVector2Array([
+				c + Vector2(-21, -30) * sc, c + Vector2(28, -30) * sc, c + Vector2(20, -17) * sc,
+				c + Vector2(28, -4) * sc, c + Vector2(-21, -4) * sc]), col)
 		"crown":
 			ci.draw_colored_polygon(PackedVector2Array([
 				c + Vector2(-30, 16) * sc, c + Vector2(-30, -16) * sc, c + Vector2(-14, 2) * sc,
@@ -230,7 +234,6 @@ static func draw_symbol(ci: CanvasItem, kind: String, c: Vector2, sc: float, col
 			ci.draw_rect(Rect2(c + Vector2(-30, 20) * sc, Vector2(60, 8) * sc), col)
 			for x in [-30.0, 0.0, 30.0]:
 				ci.draw_circle(c + Vector2(x, -18 if x != 0.0 else -26) * sc, 4.0 * sc, col)
-		"chain":
-			ci.draw_arc(c + Vector2(-14, 0) * sc, 14.0 * sc, 0.0, TAU, 28, col, 6.0 * sc)
-			ci.draw_arc(c + Vector2(14, 0) * sc, 14.0 * sc, 0.0, TAU, 28, col, 6.0 * sc)
-			ci.draw_rect(Rect2(c + Vector2(-6, -4) * sc, Vector2(12, 8) * sc), col)
+		"hammer":
+			ci.draw_rect(Rect2(c + Vector2(-4, -12) * sc, Vector2(8, 42) * sc), col)
+			ci.draw_rect(Rect2(c + Vector2(-24, -30) * sc, Vector2(44, 20) * sc), col)

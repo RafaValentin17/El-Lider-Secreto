@@ -75,7 +75,7 @@ func _draw() -> void:
 			var fillc := Color("#c0392b") if fas else Color("#2e86c1")
 			draw_rect(r.grow(-7.0), fillc)
 		elif not fas and i == 4:
-			PolicyCard.draw_symbol(self, "cap", c, 0.9, acc)
+			PolicyCard.draw_symbol(self, "flag", c, 0.9, acc)
 		elif fas:
 			var pw: String = powers[i] if i < powers.size() else ""
 			if pw != "":
