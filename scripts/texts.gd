@@ -72,15 +72,15 @@ Ejemplo: en una partida de 5, los 5 jugadores reciben su carta en secreto. Una s
 	{
 		"title": "2. Objetivo",
 		"color": "#6b4f10",
-		"text": """[color=#4aa3ff]LIBERTADORES[/color]: aprobar 5 [color=#e6e6e6]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] o ejecutar a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
-[color=#e0463c]TIRANOS[/color]: aprobar 6 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], o conseguir que [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] salga elegido [color=#b388ff]CONSEJERO[/color] tras tener 3 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] aprobadas.
+		"text": """[color=#4aa3ff]LIBERTADORES[/color]: aprobar 5 [color=#9fd8ff]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] o ejecutar a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+[color=#e0463c]TIRANOS[/color]: aprobar 6 [color=#ff8a80]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], o conseguir que [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] salga elegido [color=#b388ff]CONSEJERO[/color] tras tener 3 [color=#ff8a80]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] aprobadas.
 
-Ejemplo: con 3 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] ya aprobadas, [color=#ff9f43]el[/color] [color=#ff9f43]REY[/color] propone a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color]. Si el gobierno es aprobado, [color=#e0463c]los[/color] [color=#e0463c]TIRANOS[/color] ganan al instante.""",
+Ejemplo: con 3 [color=#ff8a80]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] ya aprobadas, [color=#ff9f43]el[/color] [color=#ff9f43]REY[/color] propone a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color]. Si el gobierno es aprobado, [color=#e0463c]los[/color] [color=#e0463c]TIRANOS[/color] ganan al instante.""",
 	},
 	{
 		"title": "3. Preparación",
 		"color": "#2d4a3e",
-		"text": """[color=#4dd0c8]El[/color] [color=#4dd0c8]MAZO[/color] de [color=#e6e6e6]LEYES[/color] se compone de 6 [color=#e6e6e6]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] y 11 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], mezcladas boca abajo.
+		"text": """[color=#4dd0c8]El[/color] [color=#4dd0c8]MAZO[/color] de [color=#e6e6e6]LEYES[/color] se compone de 6 [color=#9fd8ff]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] y 11 [color=#ff8a80]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], mezcladas boca abajo.
 El primer [color=#ff9f43]REY[/color] se elige al azar. Después, el cargo pasa por orden en cada ronda.
 
 Ejemplo: en una partida de 5, el primer [color=#ff9f43]REY[/color] sale al azar entre los 5 jugadores. La siguiente ronda pasa al jugador siguiente en el orden.""",
@@ -125,6 +125,6 @@ Ejemplo de ejecución: [color=#ff9f43]el[/color] [color=#ff9f43]REY[/color] ejec
 
 Toda la información que tengas puedes contarla o mentir según te convenga.
 [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] solo está obligado a decir la verdad si es ejecutado o elegido [color=#b388ff]CONSEJERO[/color] tras la tercera [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color].
-La forma más fácil de que ganen [color=#e0463c]los[/color] [color=#e0463c]TIRANOS[/color] es elegir a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color] para que promulgue [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color].""",
+La forma más fácil de que ganen [color=#e0463c]los[/color] [color=#e0463c]TIRANOS[/color] es elegir a [color=#d4af37]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color] para que promulgue [color=#ff8a80]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color].""",
 	},
 ]
