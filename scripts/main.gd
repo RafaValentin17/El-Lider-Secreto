@@ -10,6 +10,7 @@ const DARK := Color("#3b0d0d")
 const NAVY := Color("#33413a")
 const GREEN := Color("#4f7d3a")
 const GREY := Color("#4a4a5e")
+const RULES_BG := Color("#2e2e2e")  # gris oscuro de las reglas
 const INK := Color("#2b1d0e")
 const TXT := 1.3  # factor de tamaño para textos legibles en móvil
 
@@ -300,7 +301,7 @@ func show_rules(page: int = 0) -> void:
 	var secs: Array = Txt.RULE_SECTIONS
 	rules_page = clampi(page, 0, secs.size() - 1)
 	var sec: Dictionary = secs[rules_page]
-	_begin_panel(Color(sec["color"]))
+	_begin_panel(RULES_BG)
 	_lbl("Reglas %d de %d" % [rules_page + 1, secs.size()], 16, CREAM)
 	_lbl(sec["title"], 28, GOLD)
 	var rt := RichTextLabel.new()
