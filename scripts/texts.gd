@@ -41,7 +41,7 @@ Veto: tras la quinta política tiránica, el Consejero puede proponer veto. Si e
 
 Poderes: ojeada a las tres siguientes políticas; investigar lealtad (cada jugador solo una vez); llamada a elecciones extraordinarias (el Rey elige al siguiente candidato y después la presidencia vuelve a su orden); ejecución (si es El Esclavista, ganan los libertadores).
 
-Límites de mandato: en la siguiente ronda, ni el Rey anterior ni el Consejero anterior pueden ser propuestos Consejero.
+Límites de mandato: el Consejero anterior nunca puede volver a ser Consejero. En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.
 
 Créditos: basado en Secret Hitler (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Esta versión cambia la maquetación y los textos. Uso no comercial."""
 
@@ -91,7 +91,7 @@ Ejemplo: en una partida de 5, el primer [color=#ff9f43]REY[/color] sale al azar 
 		"text": """El [color=#ff9f43]REY[/color] propone a un [color=#b388ff]CONSEJERO[/color].
 Todos los jugadores vivos, incluidos el [color=#ff9f43]REY[/color] y el [color=#b388ff]CONSEJERO[/color] propuesto, votan en secreto [color=#3fbf6a]SÍ[/color] o [color=#ff5c8a]NO[/color].
 Se necesita mayoría simple de [color=#3fbf6a]SÍ[/color]. Si gana el [color=#ff5c8a]NO[/color] o hay empate, el gobierno fracasa y el marcador de fracasos sube 1.
-Si el gobierno es aprobado, ni el [color=#ff9f43]REY[/color] ni el [color=#b388ff]CONSEJERO[/color] de esa ronda podrán ser propuestos [color=#b388ff]CONSEJERO[/color] en la siguiente ronda.
+Si el gobierno es aprobado, el [color=#b388ff]CONSEJERO[/color] nunca podrá volver a serlo. En partidas de 7 o más jugadores, el [color=#ff9f43]REY[/color] de esa ronda tampoco podrá serlo en la siguiente.
 Al tercer fracaso seguido, se promulga automáticamente la [color=#e6e6e6]LEY[/color] de arriba del [color=#4dd0c8]MAZO[/color], sin votación.
 
 Ejemplo de mayoría: 5 jugadores (Ana, Luis, Marta, Pablo y Lucía). Ana, [color=#ff9f43]REY[/color], propone a Luis. Votan: Ana [color=#3fbf6a]SÍ[/color], Luis [color=#3fbf6a]SÍ[/color], Marta [color=#ff5c8a]NO[/color], Pablo [color=#3fbf6a]SÍ[/color] y Lucía [color=#ff5c8a]NO[/color]. Son 3 [color=#3fbf6a]SÍ[/color] frente a 2 [color=#ff5c8a]NO[/color]: el gobierno queda aprobado. Ana no puede ser [color=#b388ff]CONSEJERA[/color] en la siguiente ronda.
