@@ -303,14 +303,16 @@ func show_rules(page: int = 0) -> void:
 	_begin_panel(Color(sec["color"]))
 	_lbl("Reglas %d de %d" % [rules_page + 1, secs.size()], 16, CREAM)
 	_lbl(sec["title"], 28, GOLD)
-	for line in sec["lines"]:
-		_lbl("• " + line, 19)
+	var rt := RichTextLabel.new()
+	rt.bbcode_enabled = true
+	rt.fit_content = true
+	rt.scroll_active = false
+	rt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rt.add_theme_font_size_override("normal_font_size", int(19 * TXT))
+	rt.add_theme_color_override("default_color", CREAM)
+	rt.text = sec["text"]
+	cur.add_child(rt)
 	_end_panel()
-	if sec.has("example"):
-		_begin_panel(Color("#1e3a2b"))
-		_lbl("Ejemplo", 16, GOLD)
-		_lbl(sec["example"], 18, CREAM)
-		_end_panel()
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	cur.add_child(row)

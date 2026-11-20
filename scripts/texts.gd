@@ -13,8 +13,8 @@ const FAS_POL := "Política tiránica"
 const TRACK := "Marcador de elecciones"
 const DRAW := "Pila de robar"
 const DISCARD := "Pila de descarte"
-const JA := "¡Ja!"
-const NEIN := "¡Nein!"
+const JA := "SÍ"
+const NEIN := "NO"
 
 const ROLE_NAME := {"liberal": "LIBERTADOR", "fascist": "TIRANO", "hitler": "EL ESCLAVISTA"}
 const ROLE_DESC := {
@@ -48,113 +48,83 @@ Créditos: basado en Secret Hitler (Mike Boxleiter, Tommy Maranges y Mac Schuber
 ## Reglas por secciones: cada una con su color, sus puntos y un ejemplo.
 const RULE_SECTIONS := [
 	{
-		"title": "1. Objetivo",
-		"color": "#6b4f10",
-		"lines": [
-			"Libertadores: promulgar 5 políticas libertadoras, o matar a El Esclavista.",
-			"Tiranos: promulgar 6 políticas tiránicas, o que El Esclavista llegue a Consejero tras la 3.ª política tiránica.",
-		],
-		"example": "Ya hay 3 políticas tiránicas en el tablero. Si El Esclavista sale elegido Consejero en una votación que gana, el equipo tirano gana al instante.",
+		"title": "1. Equipos",
+		"color": "#3b1f5c",
+		"text": """[color=#4aa3ff]LIBERTADORES[/color]: son la mayoría y no conocen el rol de los demás jugadores.
+[color=#e0463c]TIRANOS[/color]: son la minoría y se conocen entre ellos.
+[color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color]: forma parte de los [color=#e0463c]TIRANOS[/color], con estas peculiaridades:
+  – Cuenta como [color=#e0463c]TIRANO[/color] a efectos de investigación.
+  – Con 5 o 6 jugadores sabe quiénes son los [color=#e0463c]TIRANOS[/color], y estos le conocen.
+  – A partir de 7 jugadores no sabe quiénes son los [color=#e0463c]TIRANOS[/color], pero estos sí le conocen a él.
+
+Reparto con 5 o 6 jugadores:
+5 jugadores: 3 [color=#4aa3ff]LIBERTADORES[/color], 1 [color=#e0463c]TIRANO[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+6 jugadores: 4 [color=#4aa3ff]LIBERTADORES[/color], 1 [color=#e0463c]TIRANO[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+
+Reparto de 7 a 10 jugadores:
+7 jugadores: 4 [color=#4aa3ff]LIBERTADORES[/color], 2 [color=#e0463c]TIRANOS[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+8 jugadores: 5 [color=#4aa3ff]LIBERTADORES[/color], 2 [color=#e0463c]TIRANOS[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+9 jugadores: 5 [color=#4aa3ff]LIBERTADORES[/color], 3 [color=#e0463c]TIRANOS[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+10 jugadores: 6 [color=#4aa3ff]LIBERTADORES[/color], 3 [color=#e0463c]TIRANOS[/color] y [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+
+Ejemplo: en una partida de 5, los 5 jugadores reciben su carta en secreto. Una será [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color], otra [color=#e0463c]TIRANO[/color] y las otras tres [color=#4aa3ff]LIBERTADORES[/color].""",
 	},
 	{
-		"title": "2. Equipos y reparto",
-		"color": "#3b1f5c",
-		"lines": [
-			"Libertadores: la mayoría. No saben quién es quién.",
-			"Tiranos: conocen a El Esclavista desde el principio.",
-			"El Esclavista: lidera el equipo tirano.",
-			"Con 5 jugadores: 3 libertadores, 1 tirano y El Esclavista.",
-		],
-		"example": "Partida de 5: cada jugador recibe en secreto una carta de rol. Una de ellas es El Esclavista, otra es Tirano y las otras tres son Libertadores.",
+		"title": "2. Objetivo",
+		"color": "#6b4f10",
+		"text": """[color=#4aa3ff]LIBERTADORES[/color]: aprobar 5 [color=#e6e6e6]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] o ejecutar a [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color].
+[color=#e0463c]TIRANOS[/color]: aprobar 6 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], o conseguir que [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color] salga elegido [color=#b388ff]CONSEJERO[/color] tras tener 3 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] aprobadas.
+
+Ejemplo: con 3 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color] ya aprobadas, el [color=#ff9f43]REY[/color] propone a [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color]. Si el gobierno es aprobado, los [color=#e0463c]TIRANOS[/color] ganan al instante.""",
 	},
 	{
 		"title": "3. Preparación",
 		"color": "#2d4a3e",
-		"lines": [
-			"Pila de robar: 6 políticas libertadoras y 11 tiránicas, mezcladas boca abajo.",
-			"El primer Rey se elige al azar.",
-			"Con 5 o 6 jugadores, El Esclavista sabe quién es el Tirano. Con 7 a 10, no.",
-		],
-		"example": "Al empezar, cada jugador mira su carta en secreto. Después se entrega el marcador de Rey al jugador elegido al azar.",
+		"text": """El [color=#4dd0c8]MAZO[/color] de [color=#e6e6e6]LEYES[/color] se compone de 6 [color=#e6e6e6]LEYES[/color] [color=#9fd8ff]LIBERTADORAS[/color] y 11 [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color], mezcladas boca abajo.
+El primer [color=#ff9f43]REY[/color] se elige al azar. Después, el cargo pasa por orden en cada ronda.
+
+Ejemplo: en una partida de 5, el primer [color=#ff9f43]REY[/color] sale al azar entre los 5 jugadores. La siguiente ronda pasa al jugador siguiente en el orden.""",
 	},
 	{
-		"title": "4. Ronda: elegir Consejero",
+		"title": "4. Dinámica de ronda",
 		"color": "#1f5f9e",
-		"lines": [
-			"El Rey propone un Consejero entre los jugadores vivos.",
-			"El Consejero anterior nunca puede repetir.",
-			"En partidas de 7 o más jugadores, el Rey anterior tampoco puede ser Consejero.",
-		],
-		"example": "Partida de 7. El gobierno anterior fue Ana de Rey y Luis de Consejero. La siguiente ronda pasa a Marta, que no puede proponer a Luis, ni a Ana si Ana fue Rey.",
+		"text": """El [color=#ff9f43]REY[/color] propone a un [color=#b388ff]CONSEJERO[/color].
+Todos los jugadores vivos, incluidos el [color=#ff9f43]REY[/color] y el [color=#b388ff]CONSEJERO[/color] propuesto, votan en secreto [color=#3fbf6a]SÍ[/color] o [color=#ff5c8a]NO[/color].
+Se necesita mayoría simple de [color=#3fbf6a]SÍ[/color]. Si gana el [color=#ff5c8a]NO[/color] o hay empate, el gobierno fracasa y el marcador de fracasos sube 1.
+Si el gobierno es aprobado, el [color=#ff9f43]REY[/color] de esa ronda no podrá ser propuesto [color=#b388ff]CONSEJERO[/color] en la siguiente ronda.
+Al tercer fracaso seguido, se promulga automáticamente la [color=#e6e6e6]LEY[/color] de arriba del [color=#4dd0c8]MAZO[/color], sin votación.
+
+Ejemplo de mayoría: 5 jugadores (Ana, Luis, Marta, Pablo y Lucía). Ana, [color=#ff9f43]REY[/color], propone a Luis. Votan: Ana [color=#3fbf6a]SÍ[/color], Luis [color=#3fbf6a]SÍ[/color], Marta [color=#ff5c8a]NO[/color], Pablo [color=#3fbf6a]SÍ[/color] y Lucía [color=#ff5c8a]NO[/color]. Son 3 [color=#3fbf6a]SÍ[/color] frente a 2 [color=#ff5c8a]NO[/color]: el gobierno queda aprobado. Ana no puede ser [color=#b388ff]CONSEJERA[/color] en la siguiente ronda.
+
+Ejemplo de empate: 6 jugadores, 3 [color=#3fbf6a]SÍ[/color] y 3 [color=#ff5c8a]NO[/color]. El gobierno fracasa y el marcador sube 1.""",
 	},
 	{
-		"title": "5. Votación",
-		"color": "#2c7a4b",
-		"lines": [
-			"Todos los jugadores vivos, incluidos Rey y Consejero, votan ¡Ja! o ¡Nein!.",
-			"Los votos se revelan a la vez. Gana el ¡Ja! si tiene más votos.",
-			"Si hay empate, el gobierno fracasa.",
-		],
-		"example": "Partida de 7: 4 votan ¡Ja! y 3 ¡Nein!, el gobierno sale. Con 3 ¡Ja! y 3 ¡Nein! hay empate y fracasa.",
-	},
-	{
-		"title": "6. Gobierno fracasado y marcador",
-		"color": "#8c2f39",
-		"lines": [
-			"Si el gobierno fracasa, el Rey pasa al siguiente jugador y el marcador sube 1.",
-			"Al tercer fracaso seguido se promulga la política de arriba de la pila de robar, sin votación y sin poder.",
-			"El marcador vuelve a 0 cada vez que se promulga una política.",
-		],
-		"example": "Fracaso 1: marcador en 1. Fracaso 2: marcador en 2. Fracaso 3: se promulga la primera carta del mazo y el marcador vuelve a 0.",
-	},
-	{
-		"title": "7. Sesión legislativa",
+		"title": "5. Sesión legislativa y ejecutiva",
 		"color": "#a35c1e",
-		"lines": [
-			"El Rey roba 3 políticas, las mira en secreto y descarta 1 boca abajo.",
-			"Pasa las 2 restantes al Consejero, que mira en secreto, descarta 1 y promulga la otra.",
-			"Durante la sesión no se puede hablar ni hacer señas.",
-		],
-		"example": "El Rey roba libertadora, tiránica y tiránica. Descarta una tiránica y pasa libertadora y tiránica. El Consejero descarta la tiránica y promulga la libertadora.",
+		"text": """El [color=#ff9f43]REY[/color] roba 3 [color=#e6e6e6]LEYES[/color] y las mira en secreto. Descarta una y pasa las otras dos al [color=#b388ff]CONSEJERO[/color].
+El [color=#b388ff]CONSEJERO[/color] elige una de esas dos [color=#e6e6e6]LEYES[/color] para promulgarla. Suma 1 punto al marcador de [color=#4aa3ff]LIBERTADORES[/color] si es azul, o al de [color=#e0463c]TIRANOS[/color] si es roja.
+Durante la sesión, el [color=#ff9f43]REY[/color] y el [color=#b388ff]CONSEJERO[/color] no pueden hablar ni hacer señas.
+
+Ejemplo: el [color=#ff9f43]REY[/color] roba [color=#9fd8ff]LIBERTADORA[/color], [color=#ff8a80]TIRÁNICA[/color] y [color=#ff8a80]TIRÁNICA[/color]. Descarta una [color=#ff8a80]TIRÁNICA[/color] y pasa la [color=#9fd8ff]LIBERTADORA[/color] y la otra [color=#ff8a80]TIRÁNICA[/color] al [color=#b388ff]CONSEJERO[/color]. Este elige la [color=#ff8a80]TIRÁNICA[/color] y se promulga: suma 1 punto a los [color=#e0463c]TIRANOS[/color].""",
 	},
 	{
-		"title": "8. Poderes de las políticas tiránicas",
+		"title": "6. Poderes tiránicos",
 		"color": "#7a1f1f",
-		"lines": [
-			"Una política tiránica da poder solo si la casilla que cubre lo tiene impreso.",
-			"Ojeada: mirar las 3 próximas políticas del mazo, sin cambiar el orden.",
-			"Investigar lealtad: ver el carné de partido de un jugador (su bando, no su rol). Solo una vez por jugador.",
-			"Elección extraordinaria: elegir al siguiente Rey. Después la rotación sigue su curso.",
-			"Ejecución: eliminar a un jugador. Si es El Esclavista, ganan los libertadores.",
-			"El poder se usa una sola vez y el Rey decide cómo.",
-		],
-		"example": "Partida de 7: la 2.ª política tiránica da Investigar. El Rey audita a Marta y ve que es Libertador. Puede contarlo o mentir.",
+		"text": """Se activan una vez por partida, cuando se promulga una [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color] que cubre una casilla con poder. Los usa el [color=#ff9f43]REY[/color] de turno, al inicio de su turno.
+Ojeada: mira en privado las 3 próximas [color=#e6e6e6]LEYES[/color], sin cambiar su orden.
+Investigar lealtad: elige a un jugador y mira en privado su equipo ([color=#4aa3ff]LIBERTADORES[/color] o [color=#e0463c]TIRANOS[/color]).
+Elección extraordinaria: el [color=#ff9f43]REY[/color] anuncia en público quién será su sucesor en la siguiente ronda.
+Ejecución: el [color=#ff9f43]REY[/color] ejecuta a un jugador. Si es [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color], los [color=#4aa3ff]LIBERTADORES[/color] ganan la partida automáticamente. Si es otro rol, este no será revelado.
+
+Ejemplo de ejecución: el [color=#ff9f43]REY[/color] ejecuta a Pablo. Si Pablo es [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color], ganan los [color=#4aa3ff]LIBERTADORES[/color]. Si es un [color=#e0463c]TIRANO[/color], su rol no se revela.""",
 	},
 	{
-		"title": "9. Veto",
+		"title": "7. Veto y consejos",
 		"color": "#4a1a5c",
-		"lines": [
-			"Tras la 5.ª política tiránica, el Consejero puede proponer veto en lugar de promulgar.",
-			"Si el Rey acepta, se descartan las 2 políticas y el marcador sube 1.",
-			"Si lo rechaza, el Consejero debe promulgar una de las dos.",
-		],
-		"example": "El Consejero propone veto. El Rey acepta: ambas cartas van al descarte y el marcador pasa a 1.",
-	},
-	{
-		"title": "10. Consejos",
-		"color": "#2e4057",
-		"lines": [
-			"Lo que sabes en secreto (investigaciones, cartas vistas) lo puedes contar o mentir.",
-			"El Esclavista solo está obligado a decir la verdad si lo asesinan o si llega a Consejero tras 3 tiranos.",
-			"Los tiranos ganan sobre todo eligiendo a El Esclavista como Consejero.",
-		],
-		"example": "Un libertador investiga a Marta, que es Tirana, y dice que es Libertadora. Mentir sobre lo que se sabe en secreto está permitido.",
-	},
-	{
-		"title": "Créditos",
-		"color": "#333333",
-		"lines": [
-			"Basado en Secret Hitler (Mike Boxleiter, Tommy Maranges y Mac Schubert; Goat, Wolf & Cabbage), licencia CC BY-NC-SA 4.0. Uso no comercial.",
-		],
+		"text": """Veto: tras la 5.ª [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color], el [color=#b388ff]CONSEJERO[/color] puede proponer un [color=#ffe082]VETO[/color] en lugar de promulgar una [color=#e6e6e6]LEY[/color]. Si el [color=#ff9f43]REY[/color] lo acepta, se descartan ambas [color=#e6e6e6]LEYES[/color] y el marcador de fracasos sube 1. Si lo rechaza, el [color=#b388ff]CONSEJERO[/color] debe promulgar una de ellas.
+
+Toda la información que tengas puedes contarla o mentir según te convenga.
+[color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color] solo está obligado a decir la verdad si es ejecutado o elegido [color=#b388ff]CONSEJERO[/color] tras la tercera [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color].
+La forma más fácil de que ganen los [color=#e0463c]TIRANOS[/color] es elegir a [color=#9e9e9e]EL[/color] [color=#d4af37]ESCLAVISTA[/color] como [color=#b388ff]CONSEJERO[/color] para que promulgue [color=#e6e6e6]LEYES[/color] [color=#ff8a80]TIRÁNICAS[/color].""",
 	},
 ]
