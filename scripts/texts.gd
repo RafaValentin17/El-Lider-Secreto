@@ -110,7 +110,7 @@ Ejemplo: el [color=#ff9f43]REY[/color] roba [color=#9fd8ff]LIBERTADORA[/color], 
 	{
 		"title": "6. Poderes tiránicos",
 		"color": "#7a1f1f",
-		"text": """Se activan una vez por partida, cuando se promulga una [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color] que cubre una casilla con poder. Los usa el [color=#ff9f43]REY[/color] de turno, al inicio de su turno.
+		"text": """Se activan una vez por partida, cuando se promulga una [color=#e6e6e6]LEY[/color] [color=#ff8a80]TIRÁNICA[/color] que cubre una casilla con poder. Los usa el [color=#ff9f43]REY[/color] actual justo después de promulgar la ley, antes de iniciar la siguiente ronda con el nuevo [color=#ff9f43]REY[/color].
 Ojeada: mira en privado las 3 próximas [color=#e6e6e6]LEYES[/color], sin cambiar su orden.
 Investigar lealtad: elige a un jugador y mira en privado su equipo ([color=#4aa3ff]LIBERTADORES[/color] o [color=#e0463c]TIRANOS[/color]).
 Elección extraordinaria: el [color=#ff9f43]REY[/color] anuncia en público quién será su sucesor en la siguiente ronda.
