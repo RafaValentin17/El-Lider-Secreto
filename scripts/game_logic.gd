@@ -106,7 +106,7 @@ func eligible_chancellors() -> Array:
 			continue
 		if i == prev_chancellor:
 			continue
-		if alive_indices().size() >= 7 and i == prev_president:
+		if i == prev_president:
 			continue
 		res.append(i)
 	return res
